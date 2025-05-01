@@ -1,9 +1,129 @@
+// 多模态表征之间相关性的评估指标
 // idcor
 @article{basile2024intrinsic,
   title={Intrinsic Dimension Correlation: uncovering nonlinear connections in multimodal representations},
   author={Basile, Lorenzo and Acevedo, Santiago and Bortolussi, Luca and Anselmi, Fabio and Rodriguez, Alex},
   journal={arXiv preprint arXiv:2406.15812},
   year={2024}
+}
+
+// svcca
+@inproceedings{svcca,
+  author = {Raghu, Maithra and Gilmer, Justin and Yosinski, Jason and Sohl-Dickstein, Jascha},
+  booktitle = {Advances in Neural Information Processing Systems},
+  pages = {},
+  publisher = {Curran Associates, Inc.},
+  title = {SVCCA: Singular Vector Canonical Correlation Analysis for Deep Learning Dynamics and Interpretability},
+  url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/dc6a7e655d7e5840e66733e9ee67cc69-Paper.pdf},
+  volume = {30},
+  year = {2017}
+}
+
+// cka
+@inproceedings{cka,
+  title={Similarity of neural network representations revisited},
+  author={Kornblith, Simon and Norouzi, Mohammad and Lee, Honglak and Hinton, Geoffrey},
+  booktitle={International conference on machine learning},
+  pages={3519--3529},
+  year={2019},
+  organization={PMLR}
+}
+
+// dcor1
+@article{dcor1,
+author = {G{\'a}bor J. Sz{\'e}kely and Maria L. Rizzo and Nail K. Bakirov},
+title = {{Measuring and testing dependence by correlation of distances}},
+volume = {35},
+journal = {The Annals of Statistics},
+number = {6},
+publisher = {Institute of Mathematical Statistics},
+pages = {2769 -- 2794},
+year = {2007},
+doi = {10.1214/009053607000000505},
+URL = {https://doi.org/10.1214/009053607000000505}
+}
+
+// dcor2
+@InProceedings{dcor2,
+author="Zhen, Xingjian and Meng, Zihang and Chakraborty, Rudrasis and Singh, Vikas",
+title="On the Versatile Uses of Partial Distance Correlation in Deep Learning",
+booktitle="Computer Vision -- ECCV 2022",
+year="2022",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="327--346",
+isbn="978-3-031-19809-0"
+}
+
+// cca 1936
+@Inbook{cca,
+author="Hotelling, Harold",
+title="Relations Between Two Sets of Variates",
+bookTitle="Breakthroughs in Statistics: Methodology and Distribution",
+year="1992",
+publisher="Springer New York",
+address="New York, NY",
+pages="162--190",
+isbn="978-1-4612-4380-9",
+doi="10.1007/978-1-4612-4380-9_14",
+url="https://doi.org/10.1007/978-1-4612-4380-9_14"
+}
+
+// twoNN
+@article{twoNN,
+  title={Estimating the intrinsic dimension of datasets by a minimal neighborhood information},
+  author={Facco, Elena and d’Errico, Maria and Rodriguez, Alex and Laio, Alessandro},
+  journal={Scientific reports},
+  volume={7},
+  number={1},
+  pages={12140},
+  year={2017},
+  publisher={Nature Publishing Group UK London}
+}
+
+// id在神经网络层中的变化
+@inproceedings{NEURIPS2019_cfcce062,
+ author = {Ansuini, Alessio and Laio, Alessandro and Macke, Jakob H and Zoccolan, Davide},
+ booktitle = {Advances in Neural Information Processing Systems},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Intrinsic dimension of data representations in deep neural networks},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2019/file/cfcce0621b49c983991ead4c3d4d3b6b-Paper.pdf},
+ volume = {32},
+ year = {2019}
+}
+
+// 多模态互信息
+@inproceedings{moschellarelative,
+  title={Relative representations enable zero-shot latent space communication},
+  author={Moschella, Luca and Maiorca, Valentino and Fumero, Marco and Norelli, Antonio and Locatello, Francesco and Rodol{\`a}, Emanuele},
+  booktitle={The Eleventh International Conference on Learning Representations}
+}
+
+// 多模态潜空间产生可转移的表示
+@InProceedings{pmlr-v202-moayeri23a,
+  title = 	 {Text-To-Concept (and Back) via Cross-Model Alignment},
+  author =       {Moayeri, Mazda and Rezaei, Keivan and Sanjabi, Maziar and Feizi, Soheil},
+  booktitle = 	 {Proceedings of the 40th International Conference on Machine Learning},
+  pages = 	 {25037--25060},
+  year = 	 {2023},
+  editor = 	 {Krause, Andreas and Brunskill, Emma and Cho, Kyunghyun and Engelhardt, Barbara and Sabato, Sivan and Scarlett, Jonathan},
+  volume = 	 {202},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {23--29 Jul},
+  publisher =    {PMLR},
+  url = 	 {https://proceedings.mlr.press/v202/moayeri23a.html},
+}
+
+
+
+// attention is all you need
+@article{vaswani2017attention,
+  title={Attention is all you need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  journal={Advances in neural information processing systems},
+  volume={30},
+  year={2017}
 }
 
 
@@ -26,8 +146,229 @@ howpublished = {\url{https://github.com/VT-vision-lab/VQA_LSTM_CNN}},
 commit = {6c91cb9}
 }
 
+@misc{tan2019lxmertlearningcrossmodalityencoder,
+      title={LXMERT: Learning Cross-Modality Encoder Representations from Transformers}, 
+      author={Hao Tan and Mohit Bansal},
+      year={2019},
+      eprint={1908.07490},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/1908.07490}, 
+}
+
+@inproceedings{lee2018stacked,
+  title={Stacked cross attention for image-text matching},
+  author={Lee, Kuang-Huei and Chen, Xi and Hua, Gang and Hu, Houdong and He, Xiaodong},
+  booktitle={Proceedings of the European conference on computer vision (ECCV)},
+  pages={201--216},
+  year={2018}
+}
+
+@inproceedings{fukui2016mcb,
+  title = {Multimodal Compact Bilinear Pooling for Visual Question Answering and Visual Grounding},
+  author = {Fukui, Akira and Park, Dong Huk and Yang, Daylen and Rohrbach, Anna and Darrell, Trevor and Rohrbach, Marcus},
+  booktitle = {Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year = {2016},
+  url = {https://arxiv.org/abs/1606.01847}
+}
+
+@inproceedings{NEURIPS2019_c74d97b0,
+  author = {Lu, Jiasen and Batra, Dhruv and Parikh, Devi and Lee, Stefan},
+  booktitle = {Advances in Neural Information Processing Systems},
+  pages = {},
+  publisher = {Curran Associates, Inc.},
+  title = {ViLBERT: Pretraining Task-Agnostic Visiolinguistic Representations for Vision-and-Language Tasks},
+  url = {https://proceedings.neurips.cc/paper_files/paper/2019/file/c74d97b01eae257e44aa9d5bade97baf-Paper.pdf},
+  volume = {32},
+  year = {2019}
+}
+
+
+// 近期（21年后）多模态大模型
+// CLIP
+@inproceedings{clip,
+  title={Learning transferable visual models from natural language supervision},
+  author={Radford, Alec and Kim, Jong Wook and Hallacy, Chris and Ramesh, Aditya and Goh, Gabriel and Agarwal, Sandhini and Sastry, Girish and Askell, Amanda and Mishkin, Pamela and Clark, Jack and others},
+  booktitle={International conference on machine learning},
+  pages={8748--8763},
+  year={2021},
+  organization={PmLR}
+}
+
+// ALBEF
+@misc{li2021alignfusevisionlanguage,
+  title={Align before Fuse: Vision and Language Representation Learning with Momentum Distillation}, 
+  author={Junnan Li and Ramprasaath R. Selvaraju and Akhilesh Deepak Gotmare and Shafiq Joty and Caiming Xiong and Steven Hoi},
+  year={2021},
+  eprint={2107.07651},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2107.07651}, 
+}
+
+// LLaVA
+@inproceedings{llava,
+  author = {Liu, Haotian and Li, Chunyuan and Wu, Qingyang and Lee, Yong Jae},
+  booktitle = {Advances in Neural Information Processing Systems},
+  pages = {34892--34916},
+  publisher = {Curran Associates, Inc.},
+  title = {Visual Instruction Tuning},
+  volume = {36},
+  year = {2023}
+}
+
+// BLIP-2
+@InProceedings{blip2,
+  title = 	 {{BLIP}-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models},
+  author =       {Li, Junnan and Li, Dongxu and Savarese, Silvio and Hoi, Steven},
+  booktitle = 	 {Proceedings of the 40th International Conference on Machine Learning},
+  pages = 	 {19730--19742},
+  year = 	 {2023},
+  volume = 	 {202},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {23--29 Jul},
+  publisher =    {PMLR},
+  url = 	 {https://proceedings.mlr.press/v202/li23q.html},
+}
+
+// Flamingo
+@inproceedings{flamingo,
+ author = {Alayrac, Jean-Baptiste and Donahue, Jeff and Luc, Pauline and Miech, Antoine and Barr, Iain and Hasson, Yana and Lenc, Karel and Mensch, Arthur and Millican, Katherine and Reynolds, Malcolm and Ring, Roman and Rutherford, Eliza and Cabi, Serkan and Han, Tengda and Gong, Zhitao and Samangooei, Sina and Monteiro, Marianne and Menick, Jacob L and Borgeaud, Sebastian and Brock, Andy and Nematzadeh, Aida and Sharifzadeh, Sahand and Bi\'{n}kowski, Miko\l aj and Barreira, Ricardo and Vinyals, Oriol and Zisserman, Andrew and Simonyan, Kar\'{e}n},
+ booktitle = {Advances in Neural Information Processing Systems},
+ publisher = {Curran Associates, Inc.},
+ title = {Flamingo: a Visual Language Model for Few-Shot Learning},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2022/file/960a172bc7fbf0177ccccbb411a7d800-Paper-Conference.pdf},
+ volume = {35},
+ year = {2022}
+}
+
+// InstructBLIP
+@misc{instructblip,
+      title={InstructBLIP: Towards General-purpose Vision-Language Models with Instruction Tuning}, 
+      author={Wenliang Dai and Junnan Li and Dongxu Li and Anthony Meng Huat Tiong and Junqi Zhao and Weisheng Wang and Boyang Li and Pascale Fung and Steven Hoi},
+      year={2023},
+      eprint={2305.06500},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2305.06500}, 
+}
+
+
+@inproceedings{nguyen2021do,
+title={Do Wide and Deep Networks Learn the Same Things? Uncovering How Neural Network Representations Vary with Width and Depth},
+author={Thao Nguyen and Maithra Raghu and Simon Kornblith},
+booktitle={International Conference on Learning Representations},
+year={2021},
+url={https://openreview.net/forum?id=KJNcAkY8tY4}
+}
+
+
 
 // 多模态数据集及benchmark
+@InProceedings{mscoco2014,
+author="Lin, Tsung-Yi and Maire, Michael and Belongie, Serge and Hays, James and Perona, Pietro and Ramanan, Deva and Doll{\'a}r, Piotr and Zitnick, C. Lawrence",
+title="Microsoft COCO: Common Objects in Context",
+booktitle="Computer Vision -- ECCV 2014",
+year="2014",
+publisher="Springer International Publishing",
+pages="740--755",
+isbn="978-3-319-10602-1"
+}
+
+// 视觉单模态模型
+// ResNet
+@inproceedings{resnet,
+  title={Deep residual learning for image recognition},
+  author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={770--778},
+  year={2016}
+}
+
+// EfficientNet
+@inproceedings{efficientnet,
+  title={Efficientnet: Rethinking model scaling for convolutional neural networks},
+  author={Tan, Mingxing and Le, Quoc},
+  booktitle={International conference on machine learning},
+  pages={6105--6114},
+  year={2019},
+  organization={PMLR}
+}
+
+// VIT
+@inproceedings{vit,
+  title={An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
+  author={Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, G and Gelly, S and others},
+  booktitle={International Conference on Learning Representations},
+  year={2020}
+}
+
+
+// 文本单模态模型
+// Bert
+@inproceedings{bert,
+  title={Bert: Pre-training of deep bidirectional transformers for language understanding},
+  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  booktitle={Proceedings of the 2019 conference of the North American chapter of the association for computational linguistics: human language technologies, volume 1 (long and short papers)},
+  pages={4171--4186},
+  year={2019}
+}
+
+// ALBERT
+@inproceedings{albert,
+  title={ALBERT: A Lite BERT for Self-supervised Learning of Language Representations},
+  author={Lan, Zhenzhong and Chen, Mingda and Goodman, Sebastian and Gimpel, Kevin and Sharma, Piyush and Soricut, Radu},
+  booktitle={International Conference on Learning Representations}
+}
+
+// Electra
+@inproceedings{electra,
+  title={ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators},
+  author={Clark, Kevin and Luong, Minh-Thang and Le, Quoc V and Manning, Christopher D},
+  booktitle={International Conference on Learning Representations}
+}
+
+// Llama
+@misc{touvron2023llamaopenefficientfoundation,
+      title={LLaMA: Open and Efficient Foundation Language Models}, 
+      author={Hugo Touvron and Thibaut Lavril and Gautier Izacard and Xavier Martinet and Marie-Anne Lachaux and Timothée Lacroix and Baptiste Rozière and Naman Goyal and Eric Hambro and Faisal Azhar and Aurelien Rodriguez and Armand Joulin and Edouard Grave and Guillaume Lample},
+      year={2023},
+      eprint={2302.13971},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2302.13971}, 
+}
+
+@misc{vicuna2023,
+    title = {Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90\%* ChatGPT Quality},
+    url = {https://lmsys.org/blog/2023-03-30-vicuna/},
+    author = {Chiang, Wei-Lin and Li, Zhuohan and Lin, Zi and Sheng, Ying and Wu, Zhanghao and Zhang, Hao and Zheng, Lianmin and Zhuang, Siyuan and Zhuang, Yonghao and Gonzalez, Joseph E. and Stoica, Ion and Xing, Eric P.},
+    month = {March},
+    year = {2023}
+}
+
+@misc{bai2023qwentechnicalreport,
+      title={Qwen Technical Report}, 
+      author={Jinze Bai and Shuai Bai and Yunfei Chu and Zeyu Cui and Kai Dang and Xiaodong Deng and Yang Fan and Wenbin Ge and Yu Han and Fei Huang and Binyuan Hui and Luo Ji and Mei Li and Junyang Lin and Runji Lin and Dayiheng Liu and Gao Liu and Chengqiang Lu and Keming Lu and Jianxin Ma and Rui Men and Xingzhang Ren and Xuancheng Ren and Chuanqi Tan and Sinan Tan and Jianhong Tu and Peng Wang and Shijie Wang and Wei Wang and Shengguang Wu and Benfeng Xu and Jin Xu and An Yang and Hao Yang and Jian Yang and Shusheng Yang and Yang Yao and Bowen Yu and Hongyi Yuan and Zheng Yuan and Jianwei Zhang and Xingxuan Zhang and Yichang Zhang and Zhenru Zhang and Chang Zhou and Jingren Zhou and Xiaohuan Zhou and Tianhang Zhu},
+      year={2023},
+      eprint={2309.16609},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2309.16609}, 
+}
+
+@misc{ChatGPT,
+	title={ChatGPT},
+	author={OpenAI},
+	year={2023},
+	url={https://openai.com/blog/chatgpt/},
+}
+
+@misc{GPT4,
+	title={Gpt-4 technical report},
+	author={OpenAI},
+	year={2023},
+}
 
 
 // 示例参考文献
