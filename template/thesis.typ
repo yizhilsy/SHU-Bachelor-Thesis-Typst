@@ -15,7 +15,7 @@
   under-cover,
 ) = documentclass(
   info: (
-    title: "多模态表征的非线形相关性研究",
+    title: "多模态表征的非线性相关性分析研究",
     school: "计算机工程与科学学院",
     major: "计算机科学与技术",
     student_id: "21121889",
@@ -31,18 +31,12 @@
 
 #abstract(
   keywords: ("多模态模型", "非线形相关性", "模态融合", "评估模态对齐"),
-  keywords-en: ("MultiModal Model", "Nolinear Correlation", "Modality Interface", "Representation Alignment"),
+  keywords-en: ("MultiModal Model", "Nolinear Correlation", "Modality Interface", "Eval Representation Alignment"),
 )[
-  摘要的内容需作者简要介绍本论文的主要内容主要为本人所完成的工作和创新点。
+  近年来以大型语言模型为中心的多模态模型取得了显著的进展，这些多模态模型在训练时往往会冻结部分或全部的各模态模型的参数，并专注于模态融合网络的训练及设计。模态融合网络的作用是将不同模态的表征对齐到同一个语义空间中，以便大型语言模型可以更好地理解不同模态间的语义关系。然而，现有的研究方法往往通过经验的方式或是设计相关的预训练任务来粗略地考虑模态对齐，缺乏一个客观的易于计算的评估算法来反映模型在训练阶段时不同时刻模态对齐的质量，从而指导模态对齐融合网络的训练，设计并以此提升模态对齐的质量。为了解决这个问题，本文从衡量多模态表征之间的非线形相关性出发，选取了多种衡量表征之间相关性的指标，并设计了多种实验条件来详实地对比这些指标的性能。在所有的实验条件中$I_d\C\o\r$指标都表现出了最好的性能，尤其是在捕获多模态表征的非线形相关性时。因此本文基于$I_d\C\o\r$开发了一个可以用于评估多模态大模型模态对齐质量的计算高效的评估算法evalmm，并在主流的多模态大模型上进行了实验验证其合理性。本文利用evalmm算法对多模态大型语言模型模态对齐程度对下游任务的影响进行了探讨，实验结果表明模态对齐程度与下游任务性能之间存在一定的正相关性。
 
-  代码公开在：#link("https://github.com/yizhilsy/multimodilty-interface-using-idcor")
-
-  (注：标题黑体小二号，正文宋体小四，行距20磅)
 ][
-  The content of the abstract requires the author to briefly introduce the main content of this paper, mainly for my work and innovation.
-
-  The code is available at: #link("https://github.com/yizhilsy/multimodilty-interface-using-idcor")
-  (Times New Roman，小四号，行距20磅)
+  In recent years, multimodal models centered around large language models (LLMs) have made remarkable progress. During training, these models often freeze part or all of the modality models and focus on the design and training of the modality fusion network. The primary role of the fusion network is to align representations from different modalities into a shared semantic space, enabling the LLM to better understand the semantic relationships across modalities. However, existing approaches typically rely on empirical designs or auxiliary pretraining tasks to achieve coarse modality alignment. These methods lack an objective and computationally efficient evaluation algorithm to reflect the quality of modality alignment at different stages of training. Such an evaluation mechanism would be valuable in guiding the training and design of the fusion network and ultimately improving alignment quality. To address this issue, this paper investigates the nonlinear correlations between multimodal representations by selecting various metrics for measuring representations' correlation. This paper design multiple experimental conditions to comprehensively compare the performance of these metrics.Among all experimental conditions, the $I_d\C\o\r$ metric consistently demonstrated the best performance, particularly in capturing the nonlinear correlations between multimodal representations. Based on this finding, this paper developed a computationally efficient evaluation algorithm, evalmm, grounded in the $I_d\C\o\r$ metric, to assess the modality alignment quality in large-scale multimodal models. This paper conducted experiments on mainstream multimodal large model to validate the effectiveness and reliability of evalmm. Furthermore, this paper explores the impact of modality alignment quality—measured by evalmm—on downstream task performance. Experimental results indicate a certain positive correlation between the degree of modality alignment and the performance on downstream tasks.
 ]
 
 #outline()
@@ -67,14 +61,14 @@
 
 == 相关研究现状
 
-=== 多模态模型的模态融合方式发展历程
+=== 多模态模型的模态融合方式
 
 在多模态领域的研究历史中，研究者们倾向于首先为每个模态选取一个表现优异的单模态模型，这些单模态模型往往是预训练好的，而将研究的主要工作放在设计不同种模态表征之间的融合方式上。多模态领域的早期工作中，融合不同模态的表征采取了简单直接的方式 @vinyals2015show @Lu2015。以视觉-语言的多模态模型为例，在Neural Image Caption @vinyals2015show 的工作中，图像表征由图像在卷积神经网络（CNN）的最后一层隐藏层得到，并直接送入循环神经网络（RNN）的decoder中进行图像描述生成；在Deeper LSTM and normalized CNN @Lu2015 的工作中，对由卷积神经网络得到的图像嵌入向量和由长短期记忆网络（LSTM）得到的问题文本的嵌入向量进行逐点相乘，得到一个新的向量作为图像和文本的融合表征并在之后送入多层分类器去预测词语的概率分布。简单直接的模态表征融合无法捕捉不同模态表征间深层次的语义关系，且受限于早期的单模态模型的性能，这些方法的性能有限，同时模型往往是为了特定的任务而设计并训练的，缺乏泛化到多种任务上的能力。
 
 之后的研究随着新的优秀的单模态模型的提出，尤其是在目标检测领域及自然语言处理领域取得成功的模型，同时随着注意力机制 @vaswani2017attention 及多模态领域中交叉注意力机制理论@NEURIPS2019_c74d97b0 的成熟与推广，研究者们基于新的单模态模型提出了更为复杂的基于注意力机制的模态融合方法。例如在LXMERT @tan2019lxmertlearningcrossmodalityencoder 的工作中，图像模态的表征由目标检测模型检测到的物体的区域感兴趣特征及位置信息特征得到，并在之后与文本模态的表征进行交叉注意力机制的融合。然而，这种模态融合方法并没有将不同模态的表征映射进同一个维度空间中进行融合，这对于模型捕获到不同模态表征间的语义关联造成了阻碍；同时目标检测的视觉模型在预训练和推理时的计算资源消耗较大 @li2021alignfusevisionlanguage。
 
 近年来大型语言模型在自然语言处理领域中取得了一系列成功，如：ChatGPT @ChatGPT 和GPT-4 @GPT4 等模型，大型语言模型为研究者展现了其卓越的指令跟随及文本理解能力。得益于预训练大型语言模型的开源，如LLaMA @touvron2023llamaopenefficientfoundation
- , Vicuna @vicuna2023 , Qwen @bai2023qwentechnicalreport 等，使得在多模态研究中构建以大型语言模型为中心的多模态模型成为可能。这是因为可以利用文本作为通用任务指令的接口得以让模型可以训练并理解多种不同的复杂任务，同时借助预训练大型语言模型出色的语言理解和指令跟随能力，这使得构建通用的可以泛化到多种不同多模态任务的模型变成了可能。目前，以大模型为基础的多模态模型主要有三种模态融合的方式：分别是以LLaVA @llava 为代表的直接投影法，以BLIP-2 @blip2 为代表的基于Attention架构的Q-Former方法，以及以Flamingo @flamingo 为代表的在大型语言模型内部插入额外参数模块以实现文本特征和视觉特征的交互融合，从而将视觉信息注入到文本的生成过程中的特征极板块融合法。这三种方法的作用机理如@img:mllm 所示。有关多模态大型语言模型的发展可以参见@img:mllmdevelopment。
+ , Vicuna @vicuna2023 , Qwen @bai2023qwentechnicalreport 等，使得在多模态研究中构建以大型语言模型为中心的多模态模型成为可能。这是因为可以利用文本作为通用任务指令的接口得以让模型可以训练并理解多种不同的复杂任务，同时借助预训练大型语言模型出色的语言理解和指令跟随能力，这使得构建通用的可以泛化到多种不同多模态任务的模型变成了可能。目前，以大模型为基础的多模态模型主要有三种模态融合的方式：分别是以LLaVA @llava 为代表的直接投影法，以BLIP-2 @blip2 为代表的基于Attention架构的Q-Former方法，以及以Flamingo @flamingo 为代表的在大型语言模型内部插入额外参数模块以实现文本特征和视觉特征的交互融合，从而将视觉信息注入到文本的生成过程中的特征极板块融合法。这三种方法的作用机理如@img:mllm 所示。
 
 从多模态模型的发展历程中可以看出，多模态模型的研究重点主要在于模态融合的方式上。值得提出的是，近年来以大型预训练语言模型为中心的多模态大模型的研究倾向于冻结部分或全部视觉模型和文本模型的参数，专注于训练模态融合的网络参数；同时在大型语言模型的指令微调技术也应用到了多模态大模型当中 @llava @instructblip 。模态融合方式直接影响了多模态模型能否建模不同模态间复杂的语义，进一步呼吁了设计合理高效的模态融合网络及评估算法的需求。
 
@@ -92,29 +86,34 @@
 #v(1.5em)
 
 
-#figure(
-  image(
-    "figures/mllmdevelopment.png",
-    width: 100%,
-  ),
-  kind: "image",
-  supplement: [图],
-  caption: [多模态大型语言模型发展示意图@mllmsurvey], // 英文图例
-)<mllmdevelopment>
+// #figure(
+//   image(
+//     "figures/mllmdevelopment.png",
+//     width: 100%,
+//   ),
+//   kind: "image",
+//   supplement: [图],
+//   caption: [多模态大型语言模型发展示意图@mllmsurvey], // 英文图例
+// )<mllmdevelopment>
 
-#v(1.5em)
+// #v(1.5em)
 
 
-=== 现有评估多模态模型多模态对齐程度的方法
+=== 评估多模态对齐程度方法
 近年来的研究中，研究者们从多种角度出发提出了评估多模态模型模态对齐程度的方法。对表征集合中的数据点进行降维并绘制降维后在二维或三维空间中的数据点散点图是一种常用的可视化角度的评估多模态对齐的方法。
 
 1. PCA方法
+PCA是一种经典的线性降维方法，主要通过正交变换将原始数据映射到一组新的、互相独立的主成分上。这些主成分按数据方差大小排序，前几个主成分保留了数据中大部分的信息。PCA适用于高维数据的可视化、噪声过滤和特征压缩，计算效率高，具有良好的可解释性。
 
 2. t-SNE方法
+t-SNE是一种非线性降维技术，特别适合高维数据的可视化。它通过最小化高维空间和低维空间中点对之间的概率分布差异，有效保留了局部结构，使得相似的数据点在低维空间中聚集在一起。虽然t-SNE在保持局部结构方面表现优异，但其计算复杂度较高，且无法直接泛化到新数据。
 
 3. UMAP方法
+UMAP是一种基于流形学习和图论的非线性降维方法，既能很好地保持数据的局部结构，也能较好地保留全局结构。相比t-SNE，UMAP计算更高效，并支持有监督学习和新样本的嵌入。它在保持聚类结构和揭示数据的整体形态方面表现出色，常用于可视化和预处理。
 
-=== 潜在空间表征相关性衡量指标研究现状
+上述的三种降维方法都可以用于对多模态表征进行降维并可视化不同模态表征降维后数据点的分布，但无法准确给出多模态表征之间具体的相关性系数值。无法进行进一步的应用。这也是本文的研究动机之一，本文希望可以寻找到一个客观合理的评估多模态表征相关性的指标来衡量多模态表征之间的相关性，并且可以在多模态大模型模态对齐的评估中进行高效的计算。
+
+=== 潜在空间表征相关性衡量指标
 在神经网络的可解释性领域，一个研究的关键点是试图判断两个不同的神经网络是否可以在相同的数据集上学习到相似的方式去处理数据。虽然定义两个神经网络具有相似的行为存在一定的困难和歧义，但在最近几年研究者们从神经网络学习到的表征之间的统计相关性入手，取得了重大的进展。基于表征学习和统计相关性，研究者们已经提出了许多线形及非线形的可用于衡量表征间相关性的指标，如Singular Value Canonical Correlation Analysis (SVCCA) @svcca ，Centered Kernel Alignment （CKA） @cka，Distance Correlation（dCor）@dcor1 @dcor2，Canonical Correlation Analysis（CCA） @cca 等。这些技术已被广泛用于更深入地了解神经模型处理信息方式的各个方面。
 
 然而，上述指标存在一些局限性。例如Canonical Correlation Analysis（CCA）主要从线形相关的角度出发去衡量表征之间的相关性，但在实际情况下，不同的表征之间往往存在复杂的非线形关系；从表征的数据点之间的距离出发的Distance Correlation（dCor）指标虽然能够捕获一定的非线形关系，但是在高维的表征上表现不佳 @basile2024intrinsic；从硬件要求的角度出发，Centered Kernel Alignment （CKA）在计算大规模数据集上得到的表征时需要消耗过高的显存及计算资源，且计算复杂度较高。在如今的多模态模型朝着大规模，使用大型语言模型的趋势下，现有的表征相关性指标在衡量多模态大模型产生的大量高维，彼此间由不同模态的模型产生的表征时的性能不甚理想。
@@ -133,40 +132,43 @@
 == 本课题的研究难点
 1. 研究难点一：在多模态大语言模型中的多模态表征往往具有高维，强非线形等特点，如何寻找一个客观合理的指标衡量多模态表征的相关性将是一个难点。同时，高维往往代表着计算复杂度的庞大，如何有效控制时间复杂度及计算资源的消耗也是一个必须考虑的难点。
 
-2. 研究难点二：多模态大语言模型的训练涉及多个阶段且不同的阶段会更新不同模态模型的参数，这导致了复杂的训练流程。其中准确理解其训练流程并优雅合理地编写对应的代码将会是一个令人兴奋的挑战。
+2. 研究难点二：多模态大语言模型的训练涉及多个阶段且不同的阶段会更新不同模态模型的参数，这导致了复杂的训练流程。其中准确理解其训练流程并编写高效的训练代码将会是一个可能的难点。
 
-3. 研究难点三：现有的数据表征相关性研究大多立足于数据本身，而多模态表征的非线性相关性指标如何有效地用于衡量多模态大语言模型的模态对齐融合程度需要设计合理的评估算法并充分分析评估算法的鲁棒性，且需要权衡评估算法在计算资源上的消耗。这将是一个可能的挑战。
+3. 研究难点三：寻找到一个客观合理的指标后，如何在评估模态对齐算法的设计中有效利用该指标来客观合理地评估模态对齐，并设计相关的实验验证所设计的评估算法的合理，这将是一个可能的难点。
 
 
 == 本文研究内容
 在多模态领域的研究中，设计一个高效的模态融合网络一直是一个重要的研究方向。在很多研究者的工作中，如Junnan Li @li2021alignfusevisionlanguage @blip2， Haotian Liu @llava 等人，都从模态融合网络的设计或是多模态预训练任务的角度上出发来保证模态融合网络的模态对齐性能。在一些研究中，如Haotian Liu @llava 等人通过消融的实验方式证实了缺乏模态对齐的训练步骤会对多模态模型的性能造成显著的下降。尽管现有的研究都在关注模态对齐的重要性，但现有的研究往往缺乏一个客观的评估指标来衡量模态对齐的质量亦或是观察多模态模型在训练过程中模态对齐程度的变化。研究者们同样也只能从多模态模型在下游任务上的性能来间接地推测设计的模态融合网络是否合理。并不利于多模态模型的进一步设计与优化。
 
 针对以上提到的这些问题，本文的研究内容如下：
-1. 研究内容一：介绍现有的主流多模态大语言模型的设计架构（如BLIP-2 @blip2，LLaVA @llava，Flamingo @flamingo 等），理解分析主流架构在模型设计尤其是多模态表征对齐融合网络设计上的思路并捋清发展历程，分析各种多模态表征对齐融合网络的优劣和特点。
+// 1. 研究内容一：介绍现有的主流多模态大语言模型的设计架构（如BLIP-2 @blip2，LLaVA @llava，Flamingo @flamingo 等），理解分析主流架构在模型设计尤其是多模态表征对齐融合网络设计上的思路并捋清发展历程，分析各种多模态表征对齐融合网络的优劣和特点。
 
-2. 研究内容二：研究多模态表征的非线性相关性，提出一个客观准确的，计算高效的评估相关性算法，并通过多角度的实验（如在高维、强非线形、线形数据集、现实多模态数据集上验证）与其他计算多模态表征的相关性的指标进行对比，分析其优劣，得到一个最佳的计算多模态表征之间的非线性相关性的算法。
+1. 研究内容一：研究多模态表征的非线性相关性，找出一个客观准确的，计算高效的评估相关性指标，并通过多角度的实验（如在高维、强非线形、线形数据集、现实多模态数据集上验证）与其他计算多模态表征的相关性的指标进行对比，分析其优劣，得到一个最佳的计算多模态表征之间的非线性相关性的指标。
 
-3. 研究内容三：借助研究内容二得到的指标衡量不同的多模态大语言模型（可能是不同的多模态大语言模型也可能是同一个多模态大语言模型的不同训练阶段）在模态对齐上的程度。设计实验研究模态对齐融合的程度将如何影响模型在后续下游任务上的性能。下游任务上的性能将借助现有的研究广泛采用的一些benchmark基准测试，如ScienceQA @scienceqa ，VQAv2 @vqav2 等来进行评估。
+3. 研究内容二：基于研究内容一中得到的评估指标，考虑到多模态大型语言模型的实际的模型架构及模态融合网络的实现，设计一个高效的评估算法来衡量多模态大语言模型的模态对齐程度。并在主流的多模态大语言模型上进行实验验证所设计的评估算法的合理性。
 
-4. 研究内容四：初步探索如何借助研究内容二得到的指标指导模态对齐融合网络的设计，训练及过滤高质量多模态数据集。
+3. 研究内容三：借助研究内容二得到的评估算法衡量多模态大语言模型在训练过程中模态对齐程度的变化。并设计实验研究模态对齐融合的程度将如何影响模型在后续下游任务上的性能。下游任务上的性能将借助现有的研究广泛采用的benchmark基准测试：ScienceQA @scienceqa 和VQAv2 @vqav2 来进行评估。
 
 == 本文组织架构
-之后再写吧
+本文的第一章是绪论，主要介绍了多模态表征非线形相关性的研究意义及背景，并对相关研究现状进行了简述，并介绍了本文的研究内容和预计的研究难点。本文的第二章对于必备的多模态相关技术进行介绍，包括Transformer、多模态对比学习、近年来的多模态大型语言模型、常见多模态Benchmark等。本文的第三章介绍了非线性相关性评估指标$I_d\C\o\r$的设计思路及实现细节，并在多种实验条件下与基线指标进行了对比实验，验证了$I_d\C\o\r$指标的卓越性能。本文的第四章介绍了基于IdCor指标设计的多模态大语言模型模态对齐评估算法的设计思路及实现细节，并在主流的多模态大语言模型上进行了实验验证，验证了其合理性。并探讨了预训练阶段模态对齐程度与下游任务性能之间的关系。本文的最后一章是结论与展望，对本文的工作进行总结，并对未来可能的研究方向进行展望。
+本文的第五章是结论与展望，对本文的工作进行总结，并对未来可能的研究方向进行展望。
+
+
 
 = 多模态相关技术介绍
 本章的目的是进行多模态领域的重要技术的简要介绍。本章的前半部分将主要介绍如Transformer、多模态对比学习、多模态融合网络等技术，便于后续章节如IdCor指标的分析提供背景及理论依据；本章的后半部分将简要介绍多模态领域中所常用的一些开源数据集及benchmark评估任务，便于后续章节实验设计的背景介绍。
 
 == 深度学习与神经网络
-
+深度学习（Deep Learning）是机器学习领域的一个重要分支，其核心是通过多层非线性变换自动学习数据的高层次特征表示。深度学习模型通常以人工神经网络为基础，利用层级结构模拟人脑处理信息的方式，从原始数据中提取复杂的抽象特征。人工神经网络（Artificial Neural Network, ANN）由多个神经元（neurons）按层级方式连接构成，基本结构包括输入层、隐藏层和输出层。深度神经网络（Deep Neural Network, DNN）通过堆叠多个隐藏层，能够建模复杂的非线性函数映射，具有强大的表达能力。训练过程中通过反向传播（Backpropagation）算法结合梯度下降方法不断优化网络参数。近年来，随着大规模数据集的可用性和计算能力的提升，深度学习在计算机视觉、自然语言处理、语音识别以及多模态融合等领域取得了突破性进展，成为人工智能的核心技术之一。
 
 == Transformer
-Transformer@vaswani2017attention 是一种利用了注意力机制的深度学习模型架构。
+Transformer@vaswani2017attention 是一种基于注意力机制（Attention Mechanism）的深度神经网络架构，模型架构如@img:transformers 所示。由Vaswani等人于2017年提出，其核心思想是通过自注意力（Self-Attention）机制建模序列中各个位置之间的依赖关系。与传统的循环神经网络（RNN）相比，Transformer完全摒弃了循环结构，具备更强的并行计算能力和更高效的长期依赖建模能力。Transformer结构主要由编码器（Encoder）和解码器（Decoder）组成，每个模块由多层堆叠的子层构成，包括多头自注意力机制（Multi-Head Self-Attention）、前馈神经网络（Feed-Forward Network）以及层归一化（Layer Normalization）和残差连接（Residual Connection）。其中，多头注意力机制通过多个注意力头捕捉不同子空间的特征信息，增强模型表达能力。Transformer架构已成为自然语言处理和多模态学习等领域的基础模块，被广泛应用于诸如BERT、GPT、ViT等大型预训练模型中，推动了各类任务性能的显著提升。
 
 
 #figure(
   image(
     "figures/transformer.png",
-    width: 70%,
+    width: 80%,
   ),
   kind: "image",
   supplement: [图],
@@ -176,20 +178,12 @@ Transformer@vaswani2017attention 是一种利用了注意力机制的深度学�
 #v(1.5em)
 
 
-
-
-=== 注意力机制
-
-=== 位置编码
-
-=== 编码器-解码器
-
 == 多模态对比学习
-对比学习是一种无监督学习方法，旨在通过对比样本之间的相似性和差异性来学习有效的表征。对比学习的核心思想是将相似的样本拉近，而将不相似的样本推远，从而使得模型能够更好地理解数据的结构和特征。
+多模态对比学习（Multimodal Contrastive Learning）是一种通过拉近语义相关模态样本距离、推远无关模态样本距离的方式，学习跨模态对齐的表征学习方法。OpenAI提出的CLIP@clip 模型是该方向的代表性工作，广泛用于图文表征对齐与下游多模态任务。CLIP模型的示意图如@img:clip_contrastive 所示。CLIP模型由一个图像编码器和一个文本编码器组成，分别将图像和文本转换为同一维度的嵌入向量。在训练阶段，CLIP在大规模图文对数据集上进行对比学习，通过最大化真实图文对在嵌入空间中的相似度，并最小化非匹配图文对之间的相似度，优化一个对比损失函数（如InfoNCE）。其核心目标是使语义相关的图像与文本在共享嵌入空间中靠得更近，从而实现跨模态的语义对齐。CLIP的对比学习框架不依赖于传统的监督分类标签，而是利用天然配对的图文数据进行预训练，使其在众多下游任务中具有良好的零样本迁移能力，推动了多模态表示学习的快速发展。
 #figure(
   image(
     "figures/clip_contrastive.png",
-    width: 70%,
+    width: 90%,
   ),
   kind: "image",
   supplement: [图],
@@ -198,22 +192,19 @@ Transformer@vaswani2017attention 是一种利用了注意力机制的深度学�
 
 #v(1.5em)
 
-
-
 == 大型语言模型结构及开源LLM
-
 === LLaMA
-LLaMA是Meta AI于2023年发布的一种大型语言模型，具有7B、13B、30B和65B四个参数规模的版本。LLaMA模型在多个自然语言处理任务上表现出色，并且在一些基准测试中超过了GPT-3和GPT-4等其他大型语言模型。
+LLaMA采用标准的Transformer解码器结构，但在模型优化方面做了多项改进，包括使用更高效的分词器（SentencePiece with Byte-Pair Encoding）、更小的嵌入维度扩展比、以及预归一化（Pre-Normalization）等技术，从而提高训练稳定性与收敛速度。LLaMA系列模型覆盖多个规模，从7B到65B参数量不等，适用于不同算力需求的研究任务。LLaMA模型在多项语言理解和生成基准任务上表现优异，具备良好的语言建模能力、上下文理解能力和生成质量。由于其开源特性，LLaMA也成为众多开源指令微调模型（如LLaVA等）的基础架构，对推动大语言模型的可复现性和透明性起到了积极作用。
 
-=== Vicuna
-Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多个对话任务上表现出色，并且在一些基准测试中超过了GPT-3.5等其他大型语言模型。
 
 === Qwen
-
+Qwen模型基于标准的Transformer解码器架构，融合了多项现代大语言模型的优化技术，具备高效、可扩展的特点。其采用改进版的旋转位置编码（RoPE），增强长文本建模能力，并引入Group Query Attention（GQA）机制以降低计算与显存开销，提升推理效率。在预训练方面，Qwen使用覆盖中英文及多语种的大规模多领域语料，提升模型在中文和跨领域任务中的表现。训练过程中结合动态长度采样与扩展上下文窗口技术，实现最高可达32K的上下文处理能力。此外，Qwen支持参数高效微调方法（如LoRA），并全面开源，兼容主流推理与训练框架，便于下游应用部署与社区研究。
 
 == 多模态大语言模型网络结构
 
 === BLIP-2
+BLIP-2是一种多模态大型语言模型，旨在将图像理解与语言生成能力结合起来，以提升多模态任务性能，尤其是在开放式图文问答和图像描述等场景中。与传统端到端训练方式不同，BLIP-2采用模块化设计，通过逐阶段连接冻结的视觉编码器和语言模型，降低了预训练成本并提升了跨模态迁移能力。BLIP-2模型由三大核心组件组成：一个预训练的图像编码器、一个轻量级的跨模态投影模块（Q-former），以及一个大型语言模型，其架构如@img:qformermllm 所示 。Q-former通过查询机制提取图像的语义表示，并将其映射至语言模型可接受的输入空间，从而实现图文对齐。整个系统以冻结视觉编码器和语言模型为前提，仅训练Q-former模块，在维持性能的同时显著减少参数更新量。BLIP-2在多项多模态基准任务上取得领先性能，如Zero-shot VQA、Image Captioning 和 Visual Reasoning，展现出强大的跨模态理解与生成能力。该模型为高效训练多模态大模型提供了一种实用且具有扩展性的范式。
+
 #figure(
   image(
     "figures/qformermllm.png",
@@ -228,6 +219,8 @@ Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多
 
 
 === LLaVA
+LLaVA是一种多模态大型语言模型，结合了预训练图像编码器与大语言模型，旨在实现多模态输入理解与自然语言生成任务。LLaVA主要聚焦于开放域图像问答（VQA）、图像描述、跨模态对话等场景，具备强大的图文对齐与推理能力。LLaVA采用模块化架构，由三部分组成：一个冻结的视觉编码器、一个视觉特征投影模块多层感知机MLP，以及一个大型语言模型（如Vicuna、LLaMA等），其架构如@img:mlpmllm 所示。其核心思想是将图像特征映射到语言模型的输入空间，使得语言模型能够以类似处理文本的方式处理图像信息。LLaVA的训练分为两个阶段：首先通过图文对比学习和图像-文本对齐训练视觉投影模块，使图像语义能够被语言模型理解；随后通过图文指令微调（Instruction Tuning），在人工构造的多模态指令数据上进一步优化模型的多轮问答能力。训练中语言模型参数通常保持冻结，仅优化中间桥接模块，从而显著降低训练资源消耗。
+
 
 #figure(
   image(
@@ -242,6 +235,8 @@ Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多
 #v(1.5em)
 
 === Flamingo
+Flamingo 的架构基于一个冻结的预训练语言模型与一个强大的视觉编码器（，中间通过插入专门设计的跨模态融合模块（Cross-Modality Gated Attention Layers）实现视觉与语言信息的高效融合。这种设计允许模型在不更新原始语言模型参数的前提下，仅微调部分跨模态层即可适应多种多模态任务，从而显著降低了训练成本。其架构如@img:flamingomllm 所示。
+
 #figure(
   image(
     "figures/flamingomllm.png",
@@ -254,28 +249,33 @@ Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多
 
 #v(1.5em)
 
-== 开源多模态数据集
-
-=== MSCOCO
-
-=== N24News
-
 == 常用的多模态benchmark评估任务
 
-=== VQAv2
-#figure(
-  image(
-    "figures/vqav2.png",
-    width: 100%,
-  ),
-  kind: "image",
-  supplement: [图],
-  caption: [VQAv2 Benchmark], // 英文图例
-)<vqav2info>
+// === VQAv2
+// VQAv2（Visual Question Answering v2）是用于图像问答任务的标准基准数据集，由 Goyal 等人于 2017 年提出，旨在评估模型在视觉理解与语言推理方面的综合能力。该数据集是在 VQAv1 的基础上扩展而来，主要改进在于通过平衡问题答案对（question-answer pairs）来缓解模型对语言偏置（language priors）的依赖。
 
-#v(1.5em)
+// VQAv2 包含约 265,000 张来自 MS-COCO 数据集的图像、约 1.1M 个人类标注的问题，以及每个问题对应的 10 个参考答案。相比 VQAv1，VQAv2 对每个问题设计了图像对，使得相同的问题在不同图像上会有不同答案，从而迫使模型关注图像内容而非语言模式进行推理。
+
+// 该数据集支持多种问答类型，包括是非题（yes/no）、数字类问题（number）和开放式答案（other），评估指标主要依据对10个参考答案的匹配度计算准确率。VQAv2 广泛用于评估视觉语言模型（如 LXMERT、UNITER、LLaVA 等）的性能，是视觉问答领域中最具代表性的基准之一。
+
+
+// #figure(
+//   image(
+//     "figures/vqav2.png",
+//     width: 100%,
+//   ),
+//   kind: "image",
+//   supplement: [图],
+//   caption: [VQAv2 Benchmark], // 英文图例
+// )<vqav2info>
+
+// #v(1.5em)
 
 === ScienceQA
+
+ScienceQA 是一个面向多模态科学问答任务的大规模基准数据集，旨在评估模型在科学知识理解、多模态信息融合以及推理能力方面的综合表现。该数据集涵盖广泛的学科领域，特别强调文本、图像和图表等多种模态信息的综合利用。ScienceQA 包含约 21,208 道多项选择题，每道题附带问题描述、选项、详细的文本讲解，并可能包含与问题相关的图像或图表等视觉信息。其中约 6,000 道题目为多模态问题，即要求模型理解图文信息的结合才能作答。数据集还标注了题目的学科类别、认知层级（如记忆、理解、应用）以及知识点标签，便于进行细粒度分析。有关ScienceQA数据集中问题的例子如@img:scienceqainfo 所示。
+
+
 #figure(
   image(
     "figures/scienceqa.png",
@@ -290,14 +290,11 @@ Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多
 
 
 
-=== TextVQA
-
-
 == 本章小结
-通过本章节对多模态技术的简要介绍，本章节对于多模态领域的重要技术做了一个简明直接的回顾，并对于多模态对齐融合网络中的模态对齐方式提供了背景知识，为后续章节的内容提供了必要的背景知识。
+通过本章节对多模态技术的简要介绍，本章节对于多模态对齐融合网络中的模态对齐方式及数据处理方式提供了背景知识，为后续章节的内容提供了必要的背景知识。
 
 
-= 评估多模态大型语言模型模态融合程度所需的指标
+= 评估模态融合程度指标
 
 == 问题分析
 已经有相当多的工作肯定了在多模态模型中，模态融合网络确保模态对齐对于模型在下游任务上的性能的重要性 @llava @li2021alignfusevisionlanguage ，模态对齐的质量直接影响了模型在下游任务上的性能。但现有的研究中缺乏一个客观的评估指标来衡量多模态模型在训练时模态对齐程度的变化。因此对于模型模态对齐的质量的评估处于一种黑盒状态，这将影响多模态模型模态融合网络的设计与在下游任务上的性能。
@@ -312,18 +309,19 @@ Vicuna是一个开源的对话模型，基于LLaMA模型进行微调。它在多
 为了解决多模态模型产生的表征之间的相关性评估问题，本文首先搜集了之前的研究中提出的多种衡量表征之间的统计相关性的指标，这些指标大多是在深度神经网络的可解释领域中研究并提出的 @klabunde2023similarity。例如：典型相关性分析（CCA） @cca ，奇异值分解典型相关性分析（SVCCA）@svcca ，中心化核对齐 （CKA） @cka ，投影加权典型相关性分析（PWCCA） @pwcca ， 距离相关系数（dCor） @dcor1 @dcor2 等，此外还有本文重点探讨的本征维度相关系数（$I_d\C\o\r$） @basile2024intrinsic 。
 
 为了充分地对比这些指标在多种条件下计算数据表征相关性的能力，本文设计了多种条件下的实验来对比这些指标的性能，具体来说，总共有四种实验条件，分别是：人造数据表征、神经网络表征、单一模态（视觉）表征、多模态（图文）表征。若我们记此时使用的评估指标、第一个表征矩阵、第二个表征矩阵、计算得到的相关性分别为 $Theta, X in RR^(n times d_1), Y in RR^(n times d_2), sigma$，那么我们将得到如下的计算公式:
+
 $ sigma = Theta(X_(n times d_1), Y_(n times d_2)) \
 Theta in \s\e\t{\m\e\t\r\i\c\s} quad sigma in [0,1]
 $<corrcomputation>
 
-在四种实验条件下得到两个表征的矩阵$X_(n times d_1) 和 Y_(n times d_2)$  后，再依据@eqt:corrcomputation 便可以应用多种指标来计算这两个表征矩阵之间的相关性。需要指出的是，由于一些指标的实现算法需要消耗大量的显存/内存，例如中心化核对齐（CKA），合理地选取表征矩阵的行大小$n$（即表征数量）是重要的。
+在四种实验条件下得到两个表征的矩阵$X_(n times d_1)$和$Y_(n times d_2)$后，再依据@eqt:corrcomputation 便可以应用多种指标来计算这两个表征矩阵之间的相关性。需要指出的是，由于一些指标的实现算法需要消耗大量的显存/内存，例如中心化核对齐（CKA），合理地选取表征矩阵的行大小$n$（即表征数量）是重要的。
 
 为了实现衡量多模态大型语言模型模态融合程度的目的，在通过对比实验得到一个良好的评估多模态表征相关性的指标后，还需要再根据几类多模态大型语言模型模态融合网络的特点，基于之前对比出来的良好的评估多模态表征相关性的指标去设计评估多模态大型语言模型模态对齐程度的算法。这个评估算法将考虑到实际的庞大评估数据集的计算资源消耗问题与多模态大型语言模型产生的表征的抽取及融合问题。有关这部分的主要内容将在第四章中进行解决。
 
-== 衡量表征相关性的基线指标的原理
-在本小节中将主要阐述上文中提到的一些衡量表征相关性的基线指标的原理。
+// == 衡量表征相关性的基线指标的原理
+// 在本小节中将主要阐述上文中提到的一些衡量表征相关性的基线指标的原理。
 
-这个之后再写
+// 这个之后再写
 
 
 == 本征维度（Intrinsic Dimension）及估算算法
@@ -331,7 +329,7 @@ $<corrcomputation>
 
 本征维度最早出现在统计学的数据降维领域。高维数据集通常具有复杂的结构和特征，直接处理这些数据可能会导致计算效率低下和信息丢失。数据降维的原理是将高维数据集中的数据点投影到一个低维空间中，以便更好地理解和分析数据并简化数据的表示和处理。研究者们试图通过对高维离散数据集合的分析，来找寻嵌入在高维数据空间的本征低维流型，其包含了数据的绝大部分信息，以实现数据集降维的目的。大多数的研究者都将本征低维流型的维度视为本征维度。
 
-本征维度的正式定义是指*一个数据集的实际有效维度的数量，即可以用最少的维度来表达数据集的大部分信息。*如@img:2dimension_corr 所示，呈现了三类二维数据集合，第一维$X$与第二维$Y$的关系分别是：线形相关（$X=Y$）、螺线关系（$X=theta/(6pi)cos theta，Y=theta/(6pi)sin theta，theta in [0，6pi]$）、随机采样关系（正态分布，$f(x)=1/(sqrt(2pi)sigma)e^(-(x-mu)^2/(2sigma^2))，f(y)=1/(sqrt(2pi)sigma)e^(-(y-mu)^2/(2sigma^2))$） ，每类数据集合采样为5000个数据点。不难观察到，第一类数据集合到本征维度为1，因为可以用一个变量来代表另外一个变量；第二类数据集合的本征维度为1，因为螺线关系采样出来的数据集本质上可以用一个极坐标函数$r=r(theta)$表示，也只需要一个变量$theta$来表示另外一个变量；而第三类数据集合的本征维度为2，因为两个变量之间没有任何关系，且两个变量均服从独立的正态分布，因此采样的数据集合需要两个变量（坐标）来表示。从这个简单的例子中，可以反映本征维度的定义，即原始的数据集合中存在冗余的无效的维度，去除那些冗余的无效的维度后，就是这个数据集合的本征维度。
+本征维度的正式定义是指*一个数据集的实际有效维度的数量，即可以用最少的维度来表达数据集的大部分信息。*如@img:2dimension_corr 所示，呈现了三类二维数据集合，第一维$X$与第二维$Y$的关系分别是：线形相关（$X=Y$）、螺线关系（$X=theta/(6pi)cos theta，Y=theta/(6pi)sin theta，theta in [0，6pi]$）、随机采样关系（正态分布，$f(x)=1/(sqrt(2pi)sigma)e^(-(x-mu)^2/(2sigma^2))，f(y)=1/(sqrt(2pi)sigma)e^(-(y-mu)^2/(2sigma^2))$） ，每类数据集合采样为5000个数据点。不难观察到，第一类数据集合到本征维度为1，因为可以用一个变量来代表另外一个变量；第二类数据集合的本征维度为1，因为螺线关系采样出来的数据集本质上可以用一个极坐标函数 $r=r(theta)$ 表示，也只需要一个变量$theta$来表示另外一个变量；而第三类数据集合的本征维度为2，因为两个变量之间没有任何关系，且两个变量均服从独立的正态分布，因此采样的数据集合需要两个变量（坐标）来表示。从这个简单的例子中，可以反映本征维度的定义，即原始的数据集合中存在冗余的无效的维度，去除那些冗余的无效的维度后，就是这个数据集合的本征维度。
 
 #figure(
   image(
@@ -357,7 +355,7 @@ $
   P(mu|d)=d^(N) product_(i=1)^(N) mu_i^(-d-1)
 $<twonn_pareto>
 
-3. MLE的核心思想是：基于假设数据在某个低维流形上近似均匀分布，使用局部点之间的距离分布构建似然函数，从而估算该流形的维度。该方法假设了数据点在一个 $d$ 维欧几里得空间中的小邻域内均匀分布，对每个点 $x$，取它的 $k$ 个最近邻点$x_(1), x_(2), ..., x_(k)$。假设这些点构成一个 $d$ 维球体内的样本，点之间的距离 $r_(1), r_(2), ..., r_(k)$ 可看作从一个半径为 R 的球体中随机抽取的。以这些距离为数据构建出维度 $d$ 的最大似然估计，推导出的无偏估计公式如 @eqt:mle1 所示。再将所有数据点的 $hat(d)(x)$ 平均起来，得到整个数据集的本征维度估计 $hat(d)$ ，如@eqt:mle2 所示。
+3. MLE的核心思想是：基于假设数据在某个低维流形上近似均匀分布，使用局部点之间的距离分布构建似然函数，从而估算该流形的维度。该方法假设了数据点在一个$d$维欧几里得空间中的小邻域内均匀分布，对每个点$x$，取它的$k$个最近邻点 $x_(1), x_(2), ..., x_(k)$。假设这些点构成一个 $d$ 维球体内的样本，点之间的距离 $r_(1), r_(2), ..., r_(k)$ 可看作从一个半径为 R 的球体中随机抽取的。以这些距离为数据构建出维度$d$的最大似然估计，推导出的无偏估计公式如 @eqt:mle1 所示。再将所有数据点的 $hat(d)(x)$ 平均起来，得到整个数据集的本征维度估计 $hat(d)$ ，如@eqt:mle2 所示。
 
 $
   hat(d)(x) = [1/(k-1)sum_(i=1)^(k-1)log(r_k/r_i)]^(-1)
@@ -474,8 +472,7 @@ $<1dspiral>
 #v(1.5em)
 
 
-
-从@tbl:1dcorrresult 中可以观察到，这三种指标在线形关系和随机关系上的人造数据表征集合上的性能都非常好。但是在螺旋关系上，线形相关性系数（$"R"^2$）和距离相关系数（dCor）计算出来的相关性结果均为0，都无法正确地反映出两个数据表征集合之间的相关性程度，即使距离相关系数（dCor）是具有捕获非线形相关性的能力的；而$\I_d\C\o\r$指标则可以正确地反映出两个数据表征集合之间的相关性程度，其相关性系数接近1，并且置信指数$p$也非常小，表明两个数据表征集合之间的相关性程度非常高。
+从@tbl:1dcorrresult 中可以观察到，这三种指标在线形关系和随机关系上的人造数据表征集合上都能精确捕获相关性是否存在。但是在螺旋关系上，线形相关性系数（$"R"^2$）和距离相关系数（dCor）计算出来的相关性结果均为0，都无法正确地反映出两个数据表征集合之间的相关性程度，即使距离相关系数（dCor）是具有捕获非线形相关性的能力的；而$\I_d\C\o\r$指标则可以正确地反映出两个数据表征集合之间的相关性程度，其相关性系数接近1，并且置信指数$p$也非常小，表明两个数据表征集合之间的相关性程度非常高。
 
 从这个实验结果中可以观察到$\I_d\C\o\r$指标在捕获非线形相关性上的强大性能。
 
@@ -527,8 +524,7 @@ $<4dcorrexp>
 尽管距离相关指数（dCor）是一种非线形相关性评估指标，但是在较为复杂的非线形关系的条件下表现不佳（即本实验中的部分相关条件和全部相关条件）。但是$\I_d\C\o\r$指标在捕获非线形相关性时表现良好，成功地捕获了部分相关和完全相关的条件下两个数据表征集合之间的非线形相关性关系。
 
 
-
-=== 在神经网络上评估
+=== 在神经网络产生的表征上评估
 深度学习技术的核心是深度神经网络。通过神经网络的多层非线形变换，可以将原始的输入数据映射为一个复杂的高维空间中的表征。神经网络的前向传播计算过程如@eqt:mlpforward 所示，其中 $X_0 in RR^(n times d)$代表了输入数据矩阵，$W_i$ 代表了神经网络层中每层的线形变换，$b_i$ 代表了每层神经元的偏置矩阵。
 
 
@@ -839,9 +835,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
 == 本章小结
 本章首先从设计多模态大型语言模型模态融合程度评估算法时所遇到的实际问题出发：表征来自不同模态模型的encoder；表征往往是高维的；表征之间存在难以捕获的复杂非线形关系，引出了需要一个能够在高维空间中准确捕获表征间非线形关系，且能够在多模态领域中对语义对齐的多模态表征准确捕获相关性的指标的需求。接着本章引入了几种基线指标：典型相关性分析（CCA） @cca ，奇异值分解典型相关性分析（SVCCA）@svcca ，中心化核对齐 （CKA） @cka ，投影加权典型相关性分析（PWCCA） @pwcca ， 距离相关系数（dCor），以及重点介绍了数据表征集合的本征维度概念以及$I_d\C\o\r$指标的原理和算法实现。
 
-本章重点设计了衡量$I_d\C\o\r$指标与其他基线指标之间的性能对比实验，通过在人造数据表征、神经网络表征、单一模态（视觉）表征、多模态（图文）表征的角度上进行全面充分的对比表征相关性指标之间的性能差异实验，并进行了详实的数据分析。通过对比实验，最终实验结果表明：$I_d\C\o\r$指标在捕获表征之间的相关性方面表现优异，尤其是在处理复杂的非线性关系时，并且在高维表征及多模态表征上都表现优异，同时对于存在一定噪声的数据时也具有良好的鲁棒性。这些良好的性能特征都是其他指标所不具有的。
-
-本章成功验证了$I_d\C\o\r$指标在不同模态表征上的可靠性，*为多模态大模型的模态对齐评估提供了有效的工具*。
+本章重点设计了衡量$I_d\C\o\r$指标与其他基线指标之间的性能对比实验，通过在人造数据表征、神经网络表征、单一模态（视觉）表征、多模态（图文）表征的角度上进行全面充分的对比表征相关性指标之间的性能差异实验，并进行了详实的数据分析。通过对比实验，最终实验结果表明：$I_d\C\o\r$指标在捕获表征之间的相关性方面表现优异，尤其是在处理复杂的非线性关系时，并且在高维表征及多模态表征上都表现优异，同时对于存在一定噪声的数据时也具有良好的鲁棒性。这些良好的性能特征都是其他指标所不具有的。本章成功验证了$I_d\C\o\r$指标在不同模态表征上的可靠性，*为多模态大模型的模态对齐评估提供了有效的工具*。
 
 
 
@@ -857,8 +851,8 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
 
 基于这个事实，本章所设计的评估多模态大型语言模型的模态对齐程度的算法主要利用了经过模态融合网络后产生的两个模态的表征集合，并将这两个模态的表征集合作为输入送入本章设计的evalmm算法。
 
-== evalmm——应用$I_d\C\o\r$指标设计多模态大型语言模型中的模态对齐评估算法
-基于在4.1节中阐述的研究思路，本节将设计一个评估多模态大型语言模型模态对齐程度（以图像文本模态为例）的算法evalmm。evalmm算法的执行步骤如下四个步骤所示，计算过程示意图如@img:evalmm 所示。本小节将对这四个步骤进行详细的阐述。
+== evalmm模态对齐评估算法
+基于在4.1节中阐述的研究思路，本节将设计一个评估多模态大型语言模型模态对齐程度（以图像文本模态为例）的算法*evalmm*（*Eval*\uate *M*\ultiModal Large Language *M*\odel）。evalmm算法的执行步骤如下四个步骤所示，计算过程示意图如@img:evalmm 所示，evalmm算法的伪代码实现如@algo:evalalgo 所示。本小节将对这四个步骤进行详细的阐述。
 
 1. 准备步骤。evalmm算法需要首先确定一个评估模态对齐程度的数据集，这个数据集需要是图像-标题对形式的多模态数据集，例如MS-COCO，N24News等人工标注的开源多模态数据集，因为这些数据集中的图像标题对已经达成了准确的语义对齐。
 
@@ -868,15 +862,11 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
 3. 分组计算$I_d\C\o\r$指标。假设评估数据集共包含了$N$个图像-标题对，那么经过第二个步骤后，将会得到$N$个视觉-文本表征对。由于实际的评估数据集包含的图像-标题对的数量$N$往往是非常大的，出于计算资源消耗的考量，将各模态的表征全部拼接后应用$I_d\C\o\r$指标的计算相关性是不现实的，因为这会消耗大量的显存资源。因此evalmm算法将会根据可设置的batch_size值将原始的$N$个视觉-文本表征对分为 $ceil(N / "batch_size")$ 组，针对每组的视觉-文本表征对，计算$I_d\C\o\r$指标。这改成了评估所有视觉-文本表征对与计算资源消耗两者的折衷。本文建议将batch_size的取值设置为 $2^n$ ，且下界为128，这是因为过小的batch_size会因为每组样本量的过小导致评估结果的不可靠。
 
 
-4. 区间统计，计算期望值。经过第三个步骤后，将会得到总计$ceil(N / "batch_size")$个$I_d\C\o\r$指标的值。统计这些值在步长为0.05的$[0.00, 1.00]$ 区间上的频率分布，并以频率比例模拟概率计算$I_d\C\o\r$指标的期望值。若记区间 $[0.05i, 0.05(i+1)]$ 上的频次为$f_i$ ，那么计算$I_d\C\o\r$指标的期望值如@eqt:idcorgroupexp 所示。
+4. 区间统计，计算期望值。经过第三个步骤后，将会得到总计$ceil(N / "batch_size")$个$I_d\C\o\r$指标的值。统计这些值在步长为0.05的$[0.00, 1.00]$ 区间上的频率分布（即直方图），并以频率比例模拟概率计算$I_d\C\o\r$指标的期望值。若记区间 $[0.05i, 0.05(i+1)]$ 上的频次为$f_i$ ，那么计算$I_d\C\o\r$指标的期望值如@eqt:idcorgroupexp 所示。该期望值就是多模态大型语言模型模态对齐程度的评估结果。
 
 $
   I_d\C\o\r = sum_(i=0)^(20)(0.05i + 1/2)f_i / N
 $<idcorgroupexp>
-
-
-
-evalmm算法的伪代码实现如@algo:evalalgo 所示
 
 
 #figure(
@@ -893,13 +883,12 @@ evalmm算法的伪代码实现如@algo:evalalgo 所示
 #figure(
   image(
     "figures/fusionway.png",
-    width: 71%,
+    width: 80%,
   ),
   kind: "image",
   supplement: [图],
   caption: [evalmm算法采取的模态融合方式计算过程], // 英文图例
 )<fusionway>
-
 
 
 #[
@@ -909,289 +898,257 @@ evalmm算法的伪代码实现如@algo:evalalgo 所示
     caption: [evalmm评估算法伪代码],
     pseudocode(
       no-number,
-      [#h(-1.25em) *input:* Two matrices $X in RR^(n times d_1)$ and $Y in RR^(n times d_2)$, $I_d$ estimator algorithm id_algo, and the number of shuffles $\s\h\u\f\f\l\e\N$],
+      [#h(-1.25em) *input:* MLLM model, Eval Dataset $X$ and batch_size],
       no-number,
-      [#h(-1.25em) *output:* $\I_d\C\o\r$ and $p$ metric reflect the correlation between $X$ and $Y$],
-      [$\i\d_1 <- "id_algo"(X)$;],
-      [$\i\d_2 <- "id_algo"(Y)$;],
-      [$\i\d_C <- "id_algo"("concat"(X,Y,dim=1))$;],
-      [$\I_d\C\o\r <- (\i\d_1 + \i\d_2 - \i\d_C) / (max(\i\d_1,\i\d_2))$;],
-      [$L <- 0;$],
-      [*for* $i in {1,2,...,\s\h\u\f\f\l\e\N}$ *do*],
+      [#h(-1.25em) *output:* multi-modality alignment to MLLM model ],
+      [IMAGEREP $<-$ list[];],
+      [TEXTREP $<-$ list[];],
+      [*for* image, text in $X$ *do*],
       ind,
-      [$Y_s = "shuffle"(Y)$;],
-      [$\i\d_s [i] <- "id_algo"("concat"(X, Y_S, dim=1))$;],
-      [*if* $\i\d_s [i] <= \i\d_C $ *then*],
-      ind,
-      [$L <- L + 1$;],
+      [image_rep $<-$ Fusion(model.connect(image));],
+      [text_rep $<-$ Fusion(model.connect(text));],
+      [IMAGEREP.append(image_rep);],
+      [TEXTREP.append(text_rep);],
       ded,
       [*end*],
+      [IMAGEGROUP = Split(IMAGEREP, batch_size);],
+      [TEXTGROUP = Split(TEXTREP, batch_size);],
+      [IDCORVEC $<-$ list[];],
+      [*for* imagerep, textrep in IMAGEGROUP, TEXTGROUP *do*],
+      ind,
+      [idcor $<- I_d\C\o\r("imagerep", "textrep")$;],
+      [IDCORVEC.append(idcor);],
       ded,
       [*end*],
-      [$p <- (L + 1) / (\s\h\u\f\f\l\e\N + 1)$;],
-      [*return* $\I_d\C\o\r, p$],
+
+      [hist = HIST(IDCORVEC, 0, 1, 0.05);],
+      [idcor_exp = Expectation(hist);],
+
+      [*return* idcor_exp;],
     ),
   )
 ]
 
 #v(1.5em)
 
-
-
-
-
 == 实验评估
-本小节主要对以LLaVA为代表的直接投影法的多模态大型语言模型进行了
+本小节从实验的角度去证明evalmm算法的有效性。实验主要对以LLaVA为代表的直接投影法的多模态大型语言模型进行了模态对齐程度的评估。具体而言，在本实验中，LLaVA模型的视觉编码器选取了开源预训练CLIP@clip 模型的视觉模型分支，即Vit-Large-Patch14-336，LLaVA模型的文本模型选取了Qwen2.5-3B-Instruct@bai2023qwentechnicalreport 模型，其拥有出色的指令跟随能力，LLaVA模型的模态融合网络选取了一个具有一个隐藏层的MLP神经网络。这种组合的LLaVA模型大致占用了7GB的显存。需要指出的是，由于LLaVA模型的模态融合网络是一个MLP神经网络，仅针对视觉特征投影到文本特征的语义空间中，因此evalmm算法中的特征融合步骤将对投影后的视觉特征进行特征融合，对文本模态每个token对应的大型语言模型嵌入向量embedding进行特征融合。
 
+Haotian Liu等人@llava 在训练LLaVA模型时的训练策略分为两阶段，第一个阶段在LLaVA-CC3M-Pretrain-595K@llava 图像问答数据集上仅对模态融合网络MLP的参数进行预训练，目的是实现图文模态之间的对齐；第二个阶段在特定的下游任务训练集上对模态融合网络MLP和文本模型的参数进行指令微调，目的是让LLaVA模型能够在特定下游任务上表现出色。其中LLaVA-CC3M-Pretrain-595K数据集是Haotian Liu等人通过对CC3M数据集进行数据清洗后得到的一个图像问答数据集，清洗后的数据集在所描述的物品的语义分布上更为均匀，且滤除了过短和过长的回答。
 
+本实验遵循这么一种训练策略，针对LLaVA模型首先进行了在第一阶段模态对齐的训练。具体而言，在LLaVA-CC3M-Pretrain-595K图像标题对数据集上进行了3个epoch的训练，一个批次的大小为32，学习率为2e-3，采用余弦学习率调度器调整学习率，在2张3090显卡的服务器上训练大致需要60个小时。在整个训练过程中，每训练2000步便保存一次模型参数。训练完成后，使用evalmm算法对保存的所有模型进行模态对齐程度的评估，选取的评估模态对齐程度的数据集仍旧是LLaVA-CC3M-Pretrain-595K（仅使用图像及问题）。模型的每个checkpoint应用evalmm算法评估得到的各指标数值分布图如@img:evalmmhist 所示。全部模型计算得到的模态对齐程度数据如@img:idcorchange 所示。
 
-== 扩展应用
-
-=== 预训练阶段的模态融合程度与后期微调阶段性能的关系
-
-
-
-
-
-
-= 格式要求
-
-
-正文各章节应拟标题，每章结束后应另起一页。标题要简明扼要，不应使用标点符号。各章、节、条的层次，可以按照“1……、1.1……、1.1.1……”标识，条以下具体款项的层次依次按照“1.1.1.1”或“（1）”、“①”等标识。各学院根据实际情况，可自行规定层次格式，但学院之内建议格式统一，以清晰无误为准@liu_survey_2024。
-
-正文是毕业论文的主体和核心部分，不同学科专业和不同的选题可以有不同的写作方式。正文一般包括以下几个方面。
-
-== 引言或背景
-引言是论文正文的开端，引言应包括毕业论文选题的背景、目的和意义；对国内外研究现状和相关领域中已有的研究成果的简要评述；介绍本项研究工作研究设想、研究方法或实验设计、理论依据或实验基础；涉及范围和预期结果等。要求言简意赅，注意不要与摘要雷同或成为摘要的注解。
-
-== 主体
-论文主体是毕业论文的主要部分，必须言之成理，论据可靠，严格遵循本学科国际通行的学术规范。在写作上要注意结构合理、层次分明、重点突出，章节标题、公式图表符号必须规范统一。论文主体的内容根据不同学科有不同的特点，一般应包括以下几个方面：
-+ 毕业设计（论文）总体方案或选题的论证；
-+ 毕业设计（论文）各部分的设计实现，包括实验数据的获取、数据可行性及有效性的处理与分析、各部分的设计计算等；
-+ 对研究内容及成果的客观阐述，包括理论依据、创新见解、创造性成果及其改进与实际应用价值等；
-+ 论文主体的所有数据必须真实可靠，自然科学论文应推理正确、结论清晰；人文和社会学科的论文应把握论点正确、论证充分、论据可靠，恰当运用系统分析和比较研究的方法进行模型或方案设计，注重实证研究和案例分析，根据分析结果提出建议和改进措施等。
-
-== 结论
-结论是毕业论文的总结，是整篇论文的归宿。应精炼、准确、完整。着重阐述自己的创造性成果及其在本研究领域中的意义、作用，还可进一步提出需要讨论的问题和建议。
-
-
-= 图表格式
-
-== 图格式
 #figure(
   image(
-    "figures/energy-distribution.png",
-    width: 70%,
+    "figures/evalmm/evalhistshow.png",
+    width: 100%,
   ),
   kind: "image",
   supplement: [图],
-  caption: [Energy distribution along radial], // 英文图例
-)<image>
+  caption: [应用evalmm算法评估得到的各指标数值分布图], // 英文图例
+)<evalmmhist>
+
+#figure(
+  image(
+    "figures/evalmm/idcorchange.png",
+    width: 81%,
+  ),
+  kind: "image",
+  supplement: [图],
+  caption: [LLaVA stage1训练过程中的模态对齐程度变化], // 英文图例
+)<idcorchange>
 
 #v(1.5em)
 
-// 图的引用请以 img 开头
-如 @img:image 所示，......
+应用evalmm算法评估LLaVA模型在第一阶段训练过程中的模态对齐程度变化符合预期。这是因为在第一阶段模态对齐的训练过程中，虽然仅训练MLP网络的参数，但是随着MLP网络的训练，经过MLP投影后的视觉特征将逐步对齐于文本特征的嵌入向量，因此模态对齐的程度将会逐渐上升，并有一种收敛的趋势。@img:idcorchange 中的模态对齐程度变化曲线符合了这一点，同时体现了上升及收敛的特征，且收敛于0.47，对于$I_d\C\o\r$指标在衡量多模态表征时是一个较高的值。这表明evalmm算法是有效的。
 
-== 表格格式
-// 表的引用请以 tbl 开头
-我们来看 @tbl:table，
+== 多模态大型语言模型模态对齐程度对下游任务的影响
+本小节是对evalmm评估算法的扩展应用。多模态大型语言模型的训练往往分为两个阶段（如LLaVA，BLIP-2等）：第一个阶段的目标是进行多模态间的对齐，第二个阶段的目标是进行下游任务的微调。本小节旨在探讨多模态大型语言模型在第一个阶段训练时达成的模态对齐程度对下游任务性能上的影响。
 
-可以续表:
-\
-\
-\
+具体而言，本文以在4.3小节中设置的LLaVA模型为例，在第一阶段模态对齐的训练中，在LLaVA-CC3M-Pretrain-595K图像问答数据集上训练3个epoch，一个批次的大小为32，学习率为2e-3，采用余弦学习率调度器调整学习率，仅训练模态融合网络MLP，并且间隔2000步进行模型的保存，同时运用evalmm算法对保存的模型进行模态对齐程度的评估。在第二阶段的训练中，选取了ScienceQA@scienceqa 作为下游任务Benchmark，其是一个广泛使用的多模态科学问答数据集，通过选项的方式来选出正确的答案。对第一阶段中保存的所有模型进行3个epoch的ScienceQA训练集的微调，一个批次的大小为16，学习率为2e-3，采用余弦学习率调度器调整学习率。之后运用ScienceQA的测试集对模型进行评估，并记录其性能表现。此外，针对微调后的模型，也使用evalmm算法对其模态对齐程度进行评估。最后将第一阶段模态对齐训练过程中的模态对齐程度与第二阶段下游任务微调过程中的性能以及模态对齐程度进行对比分析。本实验中使用的evalmm评估数据集皆为LLaVA-CC3M-Pretrain-595K（仅使用图像及问题）。
 
-#tablex(
-  ..for i in range(15) {
-    ([250], [88], [5900], [1.65])
-  },
-  header: (
-    [感应频率 #linebreak() (kHz)],
-    [感应发生器功率 #linebreak() (%×80kW)],
-    [工件移动速度 #linebreak() (mm/min)],
-    [感应圈与零件间隙 #linebreak() (mm)],
+实验结果如@img:sqaexp 和@img:idcorcompare 所示，在@img:sqaexp 中，蓝色的折线代表了全部问题的正确率，绿色的线代表非多模态问题的正确率，橙色的线代表多模态问题的正确率。在@img:idcorcompare 中，红色的线代表微调前模型的模态对齐程度，青色的线代表微调后模型的模态对齐程度。不难观察到，模型在第一阶段模态对齐的程度总体上与模型在下游任务上进行微调后的性能呈现一定的正相关。尤其是在16000、32000、50000步这些接近于一阶段每个epoch训练结束时的checkpoint附近表现出了较好的性能。
+
+
+#figure(
+  image(
+    "figures/evalmm/acc&mmacc&nonmmacc.png",
+    width: 100%,
   ),
-  columns: (1fr, 1fr, 1fr, 1fr),
-  colnum: 4,
-  caption: [66666666],
-  label-name: "table",
-)
+  kind: "image",
+  supplement: [图],
+  caption: [stage1不同checkpoint模型在ScienceQA数据集微调后的性能], // 英文图例
+)<sqaexp>
 
+#figure(
+  image(
+    "figures/evalmm/idcorcompare.png",
+    width: 80%,
+  ),
+  kind: "image",
+  supplement: [图],
+  caption: [LLaVA stage1训练过程中的模态对齐程度变化], // 英文图例
+)<idcorcompare>
 
-== 公式格式
-
-// 公式的引用请以 eqt 开头
-我要引用 @eqt:equation。
-
-$ 1 / mu nabla^2 Alpha - j omega sigma Alpha - nabla(1/mu) times (nabla times Alpha) + J_0 = 0 $<equation>
-
-== 算法格式
-我要引用 @algo:algorithm
-
-算法也可以续：
-#v(10em)
-#[
-  #import "@preview/lovelace:0.2.0": *
-  #algox(
-    label-name: "algorithm",
-    caption: [欧几里得辗转相除],
-    pseudocode(
-      no-number,
-      [#h(-1.25em) *input:* integers $a$ and $b$],
-      no-number,
-      [#h(-1.25em) *output:* greatest common divisor of $a$ and $b$],
-      [*while* $a != b$ *do*],
-      ind,
-      [*if* $a > b$ *then*],
-      ind,
-      $a <- a - b$,
-      ded,
-      [*else*],
-      ind,
-      $b <- b - a$,
-      ded,
-      [*end*],
-      ded,
-      [*end*],
-      [*return* $a$],
-    ),
-  )
-]
-
-也可以直接插入代码：
-#algox(
-  label-name: "algorithm-1",
-  caption: [欧几里得辗转相除C++实现],
-  [
-    ```cpp
-    #include <bits/stdc++.h>
-    using namespace std;
-    int gcd(int a, int b) {
-      while (a != b) {
-        if (a > b) a -= b;
-        else b -= a;
-      }
-      return a;
-    }
-    ```
-  ],
-)
+#v(4em)
 
 == 本章小结
+本章主要介绍了基于$I_d\C\o\r$指标所设计的评估多模态大型语言模型模态对齐程度的算法evalmm。对其执行过程进行了详细的阐述。此外，应用evalmm算法对实际的多模态大型语言模型LLaVA在第一阶段模态对齐的训练过程中进行了评估，评估结果符合预期，表明evalmm算法是客观有效的。同时，evalmm算法的设计过程充分考虑了计算资源的消耗，是一个高效的评估算法。在本章的最后部分，还利用了evalmm算法对多模态大型语言模型模态对齐程度对下游任务的影响进行了探讨，实验结果表明模态对齐程度与下游任务性能之间存在一定的正相关性，这为多模态相关的研究提供了新的视角。
 
-本章介绍了……
 
-#conclusion[
-  结论是毕业论文的总结，是整篇论文的归宿。应精炼、准确、完整。着重阐述自己的创造性成果及其在本研究领域中的意义、作用，还可进一步提出需要讨论的问题和建议。
-]
+= 总结与展望
+本章主要是对全文的研究内容以及所提出方法的总结，并且对实验方法还存在
+着的一些未能解决的问题以及未来可能的解决方案进行展望。
+
+== 总结
+本文的研究内容主要是设计了一个评估多模态大型语言模型模态对齐程度的算法evalmm。evalmm算法是基于$I_d\C\o\r$指标设计的，evalmm算法的设计过程充分考虑了计算资源的消耗，是一个高效的评估算法。本文通过大量详实的实验条件，充分对比了$I_d\C\o\r$指标与其他基线指标在捕获高维多模态表征之间复杂非线形关系的性能差异，最终验证了$I_d\C\o\r$指标在多模态表征上的强大性能，证明了$I_d\C\o\r$指标具有捕获多模态表征之间复杂非线性关系的能力，且在高维表征及多模态表征上都表现优异，同时对于存在一定噪声的数据时也具有良好的鲁棒性；此外也在实际的多模态大型语言模型中验证了evalmm评估算法的有效性；并且利用了evalmm评估算法探讨了多模态模型微调前的模态对齐程度与下游任务性能之间存在一定的正相关性。
+
+本文的创新点可以分为以下几点：
+1. 创新点一：本文通过设置大量详实的实验条件，充分对比了$I_d\C\o\r$指标与其他基线指标在捕获高维多模态表征之间复杂非线形关系的性能差异。
+
+2. 创新点二：本文基于$I_d\C\o\r$指标设计了一个评估多模态大型语言模型模态对齐程度的算法evalmm。evalmm算法易于计算，在设计时充分考虑了计算资源的消耗，且在实际的多模态大型语言模型模态对齐程度评估中表现出了良好的性能。
+
+3. 创新点三：本论文从多模态表征之间的非线性相关性出发，衡量多模态大语言模型不同模态编码器得到的多模态表征之间的相关性。这将有助于从一个新的角度进一步理解多模态大语言模型如何整合不同模态间的信息。
+
+== 展望
+本文虽然通过实证证明了evalmm评估算法的有效性，但是仅在以LLaVA为代表的直接投影法的多模态大型语言模型上进行了评估，选取的评估模态对齐程度的数据集也仅限于LLaVA-CC3M-Pretrain-595K图像标题对数据集。未来的工作可以选取更多的评估模态对齐的数据集以及在更多的多模态大型语言上进行评估（如BLIP-2）。在这之后将进行更多的探究。
+
+在evalmm算法中的特征融合步骤中，未进行消融实验来验证基于注意力机制的融合方式的有效性。未来的工作可以对比不同的模态融合方式（如简单平均，最大池化等）在evalmm算法中的表现，从而进行综合的对比。
+
+探讨多模态大型语言模型在第一个阶段训练时达成的模态对齐程度对下游任务性能上的影响的实验中，选取的下游任务仅限于ScienceQA数据集。未来的工作可以选取更多的下游任务进行对比分析，从而进行全面的探究。
+
+// = 格式要求
+
+
+// 正文各章节应拟标题，每章结束后应另起一页。标题要简明扼要，不应使用标点符号。各章、节、条的层次，可以按照“1……、1.1……、1.1.1……”标识，条以下具体款项的层次依次按照“1.1.1.1”或“（1）”、“①”等标识。各学院根据实际情况，可自行规定层次格式，但学院之内建议格式统一，以清晰无误为准@liu_survey_2024。
+
+// 正文是毕业论文的主体和核心部分，不同学科专业和不同的选题可以有不同的写作方式。正文一般包括以下几个方面。
+
+// == 引言或背景
+// 引言是论文正文的开端，引言应包括毕业论文选题的背景、目的和意义；对国内外研究现状和相关领域中已有的研究成果的简要评述；介绍本项研究工作研究设想、研究方法或实验设计、理论依据或实验基础；涉及范围和预期结果等。要求言简意赅，注意不要与摘要雷同或成为摘要的注解。
+
+// == 主体
+// 论文主体是毕业论文的主要部分，必须言之成理，论据可靠，严格遵循本学科国际通行的学术规范。在写作上要注意结构合理、层次分明、重点突出，章节标题、公式图表符号必须规范统一。论文主体的内容根据不同学科有不同的特点，一般应包括以下几个方面：
+// + 毕业设计（论文）总体方案或选题的论证；
+// + 毕业设计（论文）各部分的设计实现，包括实验数据的获取、数据可行性及有效性的处理与分析、各部分的设计计算等；
+// + 对研究内容及成果的客观阐述，包括理论依据、创新见解、创造性成果及其改进与实际应用价值等；
+// + 论文主体的所有数据必须真实可靠，自然科学论文应推理正确、结论清晰；人文和社会学科的论文应把握论点正确、论证充分、论据可靠，恰当运用系统分析和比较研究的方法进行模型或方案设计，注重实证研究和案例分析，根据分析结果提出建议和改进措施等。
+
+// == 结论
+// 结论是毕业论文的总结，是整篇论文的归宿。应精炼、准确、完整。着重阐述自己的创造性成果及其在本研究领域中的意义、作用，还可进一步提出需要讨论的问题和建议。
+
+
+
+
+// #conclusion[
+//   结论是毕业论文的总结，是整篇论文的归宿。应精炼、准确、完整。着重阐述自己的创造性成果及其在本研究领域中的意义、作用，还可进一步提出需要讨论的问题和建议。
+// ]
 
 // 参考文献
 #bib(bibfunc: bibliography("ref.bib")) // full: false 表示只显示已引用的文献，不显示未引用的文献；true 表示显示所有文献
 
-#show: appendix
+// #show: appendix
 
-= 附录格式
+// = 附录格式
 
-论文附录依次用大写字母“附录A、附录B、附录C……”表示，附录内的分级序号可采用“附A1、附A1.1、附A1.1.1”等表示，图、表、公式均依此类推为“图A1、表A1、式（A1）”等。包含以下内容：
+// 论文附录依次用大写字母“附录A、附录B、附录C……”表示，附录内的分级序号可采用“附A1、附A1.1、附A1.1.1”等表示，图、表、公式均依此类推为“图A1、表A1、式（A1）”等。包含以下内容：
 
-（1）代码、图表、标准、手册等数据；
+// （1）代码、图表、标准、手册等数据；
 
-（2）未发表过的一手文献；
+// （2）未发表过的一手文献；
 
-（3）公式推导与证明、调查表等；
+// （3）公式推导与证明、调查表等；
 
-（4）辅助性教学工具或表格；
+// （4）辅助性教学工具或表格；
 
-（5）其他需要展示或说明的内容
+// （5）其他需要展示或说明的内容
 
-……
+// ……
 
-（标题黑体小二号，内容Times New Roman/宋体，小四号，行距20磅）
+// （标题黑体小二号，内容Times New Roman/宋体，小四号，行距20磅）
 
-== 测试1
+// == 测试1
 
-#figure(
-  image(
-    "figures/energy-distribution.png",
-    width: 70%,
-  ),
-  kind: "image",
-  supplement: [图],
-  caption: [Energy distribution along radial], // 英文图例
-)<image2>
-......
+// #figure(
+//   image(
+//     "figures/energy-distribution.png",
+//     width: 70%,
+//   ),
+//   kind: "image",
+//   supplement: [图],
+//   caption: [Energy distribution along radial], // 英文图例
+// )<image2>
+// ......
 
-=== 测试1.1
+// === 测试1.1
 
-#figure(
-  image(
-    "figures/energy-distribution.png",
-    width: 70%,
-  ),
-  kind: "image",
-  supplement: [图],
-  caption: [Energy distribution along radial], // 英文图例
-)<image3>
+// #figure(
+//   image(
+//     "figures/energy-distribution.png",
+//     width: 70%,
+//   ),
+//   kind: "image",
+//   supplement: [图],
+//   caption: [Energy distribution along radial], // 英文图例
+// )<image3>
 
-= 测试2
-#figure(
-  image(
-    "figures/energy-distribution.png",
-    width: 70%,
-  ),
-  kind: "image",
-  supplement: [图],
-  caption: [Energy distribution along radial], // 英文图例
-)<image4>
+// = 测试2
+// #figure(
+//   image(
+//     "figures/energy-distribution.png",
+//     width: 70%,
+//   ),
+//   kind: "image",
+//   supplement: [图],
+//   caption: [Energy distribution along radial], // 英文图例
+// )<image4>
 
 
-#algox(
-  label-name: "twoNNpytorch",
-  caption: [twoNN估算数据集本征维度算法PyTorch实现],
-  [
-    ```python
-    def twoNN(X,fraction=0.9,distances=False):
-      if not distances:
-          X=torch.cdist(X,X)
-      Y=torch.topk(X, 3, dim=1, largest=False)[0]
-      # clean data
-      k1 = Y[:,1]
-      k2 = Y[:,2]
-      #remove zeros and degeneracies (k1==k2)
-      old_k1=k1
-      k1 = k1[old_k1!=0]
-      k2 = k2[old_k1!=0]
-      old_k1=k1
-      k1 = k1[old_k1!=k2] 
-      k2 = k2[old_k1!=k2]
-      # n.of points to consider for the linear regression
-      npoints = int(np.floor(len(k1)*fraction))
-      # define mu and Femp
-      N = len(k1)
-      mu,_ = torch.sort(torch.divide(k2, k1).flatten())
-      Femp = (torch.arange(1,N+1,dtype=X.dtype))/N
-      # take logs (leave out the last element because 1-Femp is zero there)
-      x = torch.log(mu[:-1])[0:npoints]
-      y = -torch.log(1 - Femp[:-1])[0:npoints]
-      # regression, on gpu if available
-      y=y.to(x.device)
-      slope=torch.linalg.lstsq(x.unsqueeze(-1),y.unsqueeze(-1))
-      return slope.solution.squeeze()
-    ```
-  ],
-)
+// #algox(
+//   label-name: "twoNNpytorch",
+//   caption: [twoNN估算数据集本征维度算法PyTorch实现],
+//   [
+//     ```python
+//     def twoNN(X,fraction=0.9,distances=False):
+//       if not distances:
+//           X=torch.cdist(X,X)
+//       Y=torch.topk(X, 3, dim=1, largest=False)[0]
+//       # clean data
+//       k1 = Y[:,1]
+//       k2 = Y[:,2]
+//       #remove zeros and degeneracies (k1==k2)
+//       old_k1=k1
+//       k1 = k1[old_k1!=0]
+//       k2 = k2[old_k1!=0]
+//       old_k1=k1
+//       k1 = k1[old_k1!=k2] 
+//       k2 = k2[old_k1!=k2]
+//       # n.of points to consider for the linear regression
+//       npoints = int(np.floor(len(k1)*fraction))
+//       # define mu and Femp
+//       N = len(k1)
+//       mu,_ = torch.sort(torch.divide(k2, k1).flatten())
+//       Femp = (torch.arange(1,N+1,dtype=X.dtype))/N
+//       # take logs (leave out the last element because 1-Femp is zero there)
+//       x = torch.log(mu[:-1])[0:npoints]
+//       y = -torch.log(1 - Femp[:-1])[0:npoints]
+//       # regression, on gpu if available
+//       y=y.to(x.device)
+//       slope=torch.linalg.lstsq(x.unsqueeze(-1),y.unsqueeze(-1))
+//       return slope.solution.squeeze()
+//     ```
+//   ],
+// )
 
-......
+// ......
 
 #acknowledgement(location: "上海大学")[
   本论文的主要工作由王含章老师指导完成，感谢王老师在论文选题、研究思路、实验设计、论文撰写等方面给予的悉心指导和帮助。感谢上海大学计算机科学与工程系的各位老师和同学们对我学习和生活的关心与支持。
+  // 表达真情实感即可。
 
-  表达真情实感即可。
+  // （致谢部分切勿照搬，本部分内容也在论文查重范围之内）
 
-  （致谢部分切勿照搬，本部分内容也在论文查重范围之内）
-
-  （格式：宋体，Times New Roman小四号字，两边对齐，首行缩进2个字符，行距23磅，字符间距为“标准”）
+  // （格式：宋体，Times New Roman小四号字，两边对齐，首行缩进2个字符，行距23磅，字符间距为“标准”）
 
 ]
 
