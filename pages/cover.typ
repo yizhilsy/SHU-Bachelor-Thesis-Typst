@@ -3,7 +3,6 @@
 #import "../style/uline.typ": uline
 
 #let cover-page(
-  date: datetime.today(),
   info: (:),
 ) = {
   set page(
@@ -14,7 +13,7 @@
 
   align(
     center,
-    text(font: ziti.songti, size: zihao.chuhao, weight: "medium")[
+    text(font: ziti.songti, size: zihao.chuhao, stroke: 0.2pt)[
       #v(2.6em)
       本科毕业论文（设计）
     ],
@@ -38,7 +37,7 @@
   )
 
   let info-value(zh) = uline(
-    25em,
+    260pt,
     text(
       zh,
       font: ziti.songti,
@@ -46,7 +45,7 @@
     ),
   )
 
-  let quote = table.cell(inset: (top: 1em), text(stroke: 1pt)[:])
+  let quote = table.cell(inset: (top: 0.7em), text(stroke: 1pt)[:])
 
   table(
     align: (x, y) => (

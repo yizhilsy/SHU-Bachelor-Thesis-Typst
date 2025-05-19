@@ -1,4 +1,4 @@
-#import "../lib.typ": documentclass, algox, tablex
+#import "../lib.typ": documentclass, algox, tablex, citex, imagex, subimagex
 
 #let (
   info,
@@ -25,7 +25,9 @@
   ),
 )
 
-#show: doc
+#show: doc.with(
+  fallback: false // 为true时字体缺失时使用系统默认，不显示豆腐块
+)
 #cover()
 #declare()
 

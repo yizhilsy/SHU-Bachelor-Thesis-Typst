@@ -6,11 +6,11 @@
 #import "pages/declare.typ": declare-page
 #import "pages/abstract.typ": abstract-page
 #import "pages/outline.typ": outline-page
-#import "pages/bib.typ": bibliography-page
+#import "pages/bib.typ": bibliography-page, citex
 #import "pages/acknowledgement.typ": acknowledgement-page
 #import "pages/conclusion.typ": conclusion-page
 #import "pages/under-cover.typ": under-cover-page
-#import "style/figures.typ": algox, tablex
+#import "style/figures.typ": algox, tablex, imagex, subimagex
 
 #let documentclass(
   info: (:),
