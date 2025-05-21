@@ -32,13 +32,13 @@
 #declare()
 
 #abstract(
-  keywords: ("多模态模型", "非线形相关性", "模态融合", "评估模态对齐"),
-  keywords-en: ("MultiModal Model", "Nolinear Correlation", "Modality Interface", "Eval Representation Alignment"),
+  keywords: ("多模态大型语言模型", "非线形相关性", "模态融合", "评估模态对齐"),
+  keywords-en: ("MultiModal LLM", "Nolinear Correlation", "Modality Interface", "Evaling Modality Alignment"),
 )[
-  近年来以大型语言模型为中心的多模态模型取得了显著的进展，这些多模态模型在训练时往往会冻结部分或全部的各模态模型的参数，并专注于模态融合网络的训练及设计。模态融合网络的作用是将不同模态的表征对齐到同一个语义空间中，以便大型语言模型可以更好地理解不同模态间的语义关系。然而，现有的研究方法往往通过经验的方式或是设计相关的预训练任务来粗略地考虑模态对齐，缺乏一个客观的易于计算的评估算法来反映模型在训练阶段时不同时刻模态对齐的质量，从而指导模态对齐融合网络的训练，设计并以此提升模态对齐的质量。为了解决这个问题，本文从衡量多模态表征之间的非线形相关性出发，选取了多种衡量表征之间相关性的指标，并设计了多种实验条件来详实地对比这些指标的性能。在所有的实验条件中内在维度相关性 $I_d\C\o\r$ 指标都表现出了最好的性能，尤其是在捕获多模态表征的非线形相关性时。因此本文基于 $I_d\C\o\r$ 开发了一个可以用于评估多模态大模型模态对齐质量的计算高效的评估算法evalmm，并在主流的多模态大模型上进行了实验验证其合理性。本文利用evalmm算法对多模态大型语言模型模态对齐程度对下游任务的影响进行了探讨，实验结果表明模态对齐程度与下游任务性能之间存在一定的正相关性。
+  近年来以大型语言模型为中心的多模态模型取得了显著的进展，这些多模态模型在训练时往往会冻结部分或全部的各模态模型的参数，并专注于模态融合网络的训练及设计。模态融合网络的作用是将不同模态的表征对齐到同一个语义空间中，以便大型语言模型可以更好地理解不同模态间的语义关系。然而，现有的研究方法往往通过经验的方式或是设计相关的预训练任务来粗略地考虑模态对齐，缺乏一个客观的易于计算的评估算法来反映模型在训练阶段时不同时刻模态对齐的质量，从而指导模态对齐融合网络的训练，设计并以此提升模态对齐的质量。为了解决这个问题，本文从衡量多模态表征之间的非线形相关性出发，选取了多种衡量表征之间相关性的指标，并设计了多种实验条件来详实地对比这些指标的性能。在所有的实验条件中内在维度相关性 $I_d\C\o\r$ 指标都表现出了最好的性能，尤其是在捕获多模态表征的非线形相关性时。因此本文基于 $I_d\C\o\r$ 设计了一个可以用于评估多模态大模型模态对齐质量的计算高效的评估算法evalmm，并在主流的多模态大模型上进行了实验验证其合理性。本文利用evalmm算法实验性地探讨了多模态大型语言模型的模态对齐程度与下游任务的性能之间的正相关性。
 
 ][
-  In recent years, multimodal models centered around large language models (LLMs) have made remarkable progress. During training, these models often freeze part or all of the modality models and focus on the design and training of the modality fusion network. The primary role of the fusion network is to align representations from different modalities into a shared semantic space, enabling the LLM to better understand the semantic relationships across modalities. However, existing approaches typically rely on empirical designs or auxiliary pretraining tasks to achieve coarse modality alignment. These methods lack an objective and computationally efficient evaluation algorithm to reflect the quality of modality alignment at different stages of training. Such an evaluation mechanism would be valuable in guiding the training and design of the fusion network and ultimately improving alignment quality. To address this issue, this paper investigates the nonlinear correlations between multimodal representations by selecting various metrics for measuring representations' correlation. This paper design multiple experimental conditions to comprehensively compare the performance of these metrics.Among all experimental conditions, the Intrinsic Dimension Correlation $I_d\C\o\r$ metric consistently demonstrated the best performance, particularly in capturing the nonlinear correlations between multimodal representations. Based on this finding, this paper developed a computationally efficient evaluation algorithm, evalmm, grounded in the $I_d\C\o\r$ metric, to assess the modality alignment quality in large-scale multimodal models. This paper conducted experiments on mainstream multimodal large model to validate the effectiveness and reliability of evalmm. Furthermore, this paper explores the impact of modality alignment quality—measured by evalmm—on downstream task performance. Experimental results indicate a certain positive correlation between the degree of modality alignment and the performance on downstream tasks.
+  In recent years, multimodal models centered around large language models (LLMs) have made remarkable progress. During training, these models often freeze part or all of the modality models and focus on the design and training of the modality fusion network. The primary role of the fusion network is to align representations from different modalities into a shared semantic space, enabling the LLM to better understand the semantic relationships across modalities. However, existing approaches typically rely on empirical designs or auxiliary pretraining tasks to achieve coarse modality alignment. These methods lack an objective and computationally efficient evaluation algorithm to reflect the quality of modality alignment at different stages of training. Such an evaluation mechanism would be valuable in guiding the training and design of the fusion network and ultimately improving alignment quality. To address this issue, this paper investigates the nonlinear correlations between multimodal representations by selecting various metrics for measuring representations' correlation. This paper design multiple experimental conditions to comprehensively compare the performance of these metrics.Among all experimental conditions, the Intrinsic Dimension Correlation $I_d\C\o\r$ metric consistently demonstrated the best performance, particularly in capturing the nonlinear correlations between multimodal representations. Based on this finding, this paper designed a computationally efficient evaluation algorithm, evalmm, grounded in the $I_d\C\o\r$ metric, to assess the modality alignment quality in large-scale multimodal models. This paper conducted experiments on mainstream multimodal large model to validate the effectiveness and reliability of evalmm. This paper experimentally investigates the positive correlation between the degree of modality alignment in large multimodal language models and their performance on downstream tasks, using the EvalMM algorithm.
 ]
 
 #outline()
@@ -171,15 +171,15 @@ Transformer@vaswani2017attention 是一种基于注意力机制（Attention Mech
 注意力机制的核心思想是模仿人类在处理信息时的注意力分配方式，例如人眼在观察图像时会有所侧重的关注某些区域。具体而言，注意力机制定义了三个矩阵：查询矩阵 $Q^(n times d_k)$ 、键矩阵 $K^(m times d_k)$、值矩阵 $V^(m times d_v)$，首先通过矩阵乘法 $Q times K^T$ 计算查询矩阵中每行查询向量与键矩阵中所有的键向量之间的余弦相似度，称结果为注意力权重矩阵 $W^(n times m)$，并适当引入一个常量对矩阵 $W$ 的所有值进行缩放，再通过Softmax函数对 $W$ 的每一行进行归一化处理，得到最终的权重矩阵 $W$。之后再通过矩阵乘法 $W times V$ 将每行查询向量对键向量的权重应用到值向量的线形组合上，得到最终的输出矩阵 $O^(n times d_v)$ 。具体的计算过程如@eqt:attentioncal 所示。
 
 $
-  "Attention"(Q, K, V) = "softmax"(Q K^T / sqrt(d_k))V
+  "Attention"(Q, K, V) = "Softmax"((Q K^T)/ sqrt(d_k))V
 $<attentioncal>
 
-Transformer在注意力机制的基础上引入了多头注意力机制，其思想是针对 $Q^(n times d_k)，K^(m times d_k)，V^(m times d_v)$ 矩阵进行 $h$ 次的投影，将初始的矩阵映射到 $h$ 个不同的子空间中，投影到不同子空间的参数是可以学习的，投影后的向量维度为 $d_k / h, d_v / h$，将这些投影后的向量各自进行注意力计算，最后将 $h$ 个子空间中的结果拼接起来。多头注意力机制的计算过程如@eqt:mhattentioncal 和@img:mhattention 所示。在整个多头注意力的计算过程中，不同子空间的注意力计算可以并行进行。
+Transformer在注意力机制的基础上引入了多头注意力机制，其思想是针对 $Q^(n times d_k), K^(m times d_k), V^(m times d_v)$ 矩阵进行 $h$ 次的投影，将初始的矩阵映射到 $h$ 个不同的子空间中，投影到不同子空间的参数是可以学习的，投影后的向量维度分别为 $d_k / h, d_v / h$，将这些投影后的向量各自进行注意力计算，最后将 $h$ 个子空间中的结果拼接起来。多头注意力机制的计算过程如@eqt:mhattentioncal 和@img:mhattention 所示。在整个多头注意力的计算过程中，不同子空间的注意力计算可以并行进行。
 
 $
-  "MultiHead"(Q, K, V) = "Concat"("head"_1,...,"head"_h) \
+  "MultiHead"(Q, K, V) = "Concat"("head"_1, ... ,"head"_h) \
   "where" "head"_i = "Attention"(Q W_i^Q, K W_i^K, V W_i^V) \
-  W_i^Q in RR^(d_k times d_k / h) quad W_i^K in RR^(d_k times d_k / h) quad W_i^V in RR^(d_v times d_v / h)
+  W_i^Q in RR^(d_k times d_k / h), quad W_i^K in RR^(d_k times d_k / h), quad W_i^V in RR^(d_v times d_v / h), quad i in [1, h]
 $<mhattentioncal>
 
 #figure(
@@ -224,7 +224,7 @@ Transformer模型的架构由编码器和解码器组成，@img:transformers 左
 
 
 $
-  S_(i j) = (hat(z)_i^I dot hat(z)_i^T) / tau
+  S_(i j) = (hat(z)_i^I dot hat(z)_j^T) / tau
 $<similaritycal>
 
 $
@@ -311,7 +311,7 @@ Flamingo 的架构基于一个冻结的预训练语言模型与一个强大的�
 
 #v(1.5em)
 
-== 开源多模态数据集及基准测试
+== 开源多模态基准测试数据集
 
 === ScienceQA
 
@@ -325,13 +325,13 @@ ScienceQA 是一个面向多模态科学问答任务的大规模基准数据集�
   ),
   kind: "image",
   supplement: [图],
-  caption: [ScienceQA Benchmark示意图], // 英文图例
+  caption: [ScienceQA 基准测试示例], // 英文图例
 )<scienceqainfo>
 
 #v(1.5em)
 
 === VQAv2
-VQAv2（Visual Question Answering v2）是用于图像问答任务的标准基准数据集，由 Goyal 等人@vqav2 于2017年提出，旨在评估模型在视觉理解与语言推理方面的综合能力。该数据集是在VQAv1的基础上扩展而来，主要改进在于通过平衡问题答案对来缓解模型对语言偏置的依赖。VQAv2包含约265,000张来自MS-COCO@mscoco2014、约1.1M个人类标注的问题，以及每个问题对应的10个参考答案。相比VQAv1，VQAv2 对每个问题设计了图像对，使得相同的问题在不同图像上会有不同答案，从而迫使模型关注图像内容而非语言模式进行推理。
+VQAv2（Visual Question Answering v2）是用于图像问答任务的标准基准数据集，由 Goyal 等人@vqav2 于2017年提出，旨在评估模型在视觉理解与语言推理方面的综合能力。该数据集是在VQAv1的基础上扩展而来，主要改进在于通过平衡问题答案对来缓解模型对语言偏置的依赖。VQAv2包含约265,000张来自MS-COCO@mscoco2014、约1.1M个人类标注的问题，以及每个问题对应的10个参考答案。相比VQAv1，VQAv2 对每个问题设计了多个配对的图像，使得相同的问题在不同图像上会有不同答案，从而迫使模型关注图像内容而非利用语言先验进行推理。
 
 该数据集支持多种问答类型，包括是非题（yes/no）、数字类问题（number）和开放式答案（other），评估指标主要依据对10个参考答案的匹配度计算准确率。VQAv2 广泛用于评估视觉语言模型的性能，是视觉问答领域中最具代表性的基准之一。该基准数据集如@img:vqav2info 所示。
 
@@ -343,7 +343,7 @@ VQAv2（Visual Question Answering v2）是用于图像问答任务的标准基�
   ),
   kind: "image",
   supplement: [图],
-  caption: [VQAv2 Benchmark], // 英文图例
+  caption: [VQAv2 基准测试示例], // 英文图例
 )<vqav2info>
 
 #v(1.5em)
@@ -370,7 +370,7 @@ VQAv2（Visual Question Answering v2）是用于图像问答任务的标准基�
 为了充分对比这些指标在多种条件下计算数据表征相关性的能力，本文设计了多种条件下的实验来对比这些指标的性能，具体来说，总共有四种实验条件，分别是：人造数据表征、神经网络表征、单一模态（视觉）表征、多模态（图文）表征。若记此时使用的评估指标、第一个表征矩阵、第二个表征矩阵、计算得到的相关性分别为 $Theta, X in RR^(n times d_1), Y in RR^(n times d_2), sigma$，那么将得到如下的计算公式:
 
 $ sigma = Theta(X_(n times d_1), Y_(n times d_2)) \
-Theta in \s\e\t{\m\e\t\r\i\c\s} quad sigma in [0,1]
+Theta in \s\e\t{\m\e\t\r\i\c\s} quad sigma in [0, 1]
 $<corrcomputation>
 
 在四种实验条件下得到两个表征的矩阵 $X_(n times d_1)$ 和 $Y_(n times d_2)$ 后，再依据@eqt:corrcomputation 便可以应用多种指标来计算这两个表征矩阵之间的相关性。需要指出的是，由于一些指标的实现算法需要消耗大量的显存/内存，例如中心化核对齐（CKA），合理地选取表征矩阵的行大小 $n$ （即表征数量）是重要的。
@@ -388,12 +388,12 @@ $<corrcomputation>
 
 本征维度最早出现在统计学的数据降维领域。高维数据集通常具有复杂的结构和特征，直接处理这些数据可能会导致计算效率低下和信息丢失。数据降维的原理是将高维数据集中的数据点投影到一个低维空间中，以便更好地理解和分析数据并简化数据的表示和处理。研究者们试图通过对高维离散数据集合的分析，来找寻嵌入在高维数据空间的本征低维流型，其包含了数据的绝大部分信息，以实现数据集降维的目的。大多数的研究者都将本征低维流型的维度视为本征维度。
 
-本征维度的正式定义是指一个数据集的实际有效维度的数量，即可以用最少的维度来表达数据集的大部分信息。如@img:2dimension_corr 所示，呈现了三类二维数据集合，这三类二维数据集合的第一维 $X$ 与第二维 $Y$ 的关系分别是：线形相关（$X=Y$）、螺线关系（$X=theta/(6pi)cos theta，Y=theta/(6pi)sin theta，theta in [0，6pi]$）、随机采样关系（正态分布，$f(x)=1/(sqrt(2pi)sigma)e^(-(x-mu)^2/(2sigma^2))，f(y)=1/(sqrt(2pi)sigma)e^(-(y-mu)^2/(2sigma^2))$） ，每类数据集合采样为5000个数据点。不难观察到，第一类数据集合到本征维度为1，因为可以用一个变量来代表另外一个变量；第二类数据集合的本征维度为1，因为螺线关系采样出来的数据集本质上可以用一个极坐标函数 $r=r(theta)$ 表示，也只需要一个变量 $theta$ 来表示另外一个变量；而第三类数据集合的本征维度为2，因为两个变量之间没有任何关系，且两个变量均服从独立的正态分布，因此采样的数据集合需要两个变量（坐标）来表示。从这个简单的例子中，可以反映本征维度的定义，即原始的数据集合中存在冗余的无效的维度，去除那些冗余的无效的维度后，就是这个数据集合的本征维度。
+本征维度的正式定义是指一个数据集的实际有效维度的数量，即可以用最少的维度来表达数据集的大部分信息。如@img:2dimension_corr 所示，呈现了三类二维数据集合，这三类二维数据集合的第一维 $X$ 与第二维 $Y$ 的关系分别是：线形相关（$X=Y$）、螺线关系（$X=theta/(6pi) cos theta, Y=theta/(6pi) sin theta, theta in [0, 6pi]$）、随机采样关系（正态分布，$f(x)=1/(sqrt(2pi)sigma)e^(-(x-mu)^2/(2sigma^2)), f(y)=1/(sqrt(2pi)sigma)e^(-(y-mu)^2/(2sigma^2))$） ，每类数据集合采样为5000个数据点。不难观察到，第一类数据集合到本征维度为1，因为可以用一个变量来代表另外一个变量；第二类数据集合的本征维度为1，因为螺线关系采样出来的数据集本质上可以用一个极坐标函数 $r=r(theta)$ 表示，也只需要一个变量 $theta$ 来表示另外一个变量；而第三类数据集合的本征维度为2，因为两个变量之间没有任何关系，且两个变量均服从独立的正态分布，因此采样的数据集合需要两个变量（坐标）来表示。从这个简单的例子中，可以反映本征维度的定义，即原始的数据集合中存在冗余的无效的维度，去除那些冗余的无效的维度后，就是这个数据集合的本征维度。
 
 #figure(
   image(
     "figures/2dimension_corr.png",
-    width: 95%,
+    width: 90%,
   ),
   kind: "image",
   supplement: [图],
@@ -441,13 +441,13 @@ $
   \I_d\C\o\r(X, Y) = (\I_d (X) + \I_d (Y) - \I_d (X plus.circle Y)) / (max(\I_d (X), \I_d (Y)))
 $<idcor>
 
-$X plus.circle Y$ 表示将 $X$ 数据集合与 $Y$ 数据集合按每个数据点的维数拼接。此外，值得注意的是，不管使用哪种估计数据集合的本征维度的方法，都存在可能的误差。因此可能计算出并不准确的本征维度 $I_d$ 值，进而影响到 $\I_d\C\o\r$ 指标的可信。因此，Lorenzo等人利用了置换检验的思想，引入了一个置信指数 $p$ 来辅助计算两个数据集合之间的相关程度。置信指数 $p$ 代表着两个数据集合之间不相关的假设成立的概率。其思想是针对按照维度拼接的数据集合 $X plus.circle Y$，人为进行总计 $\s\h\u\f\f\l\e\N$ 次的行打乱（即按行更改数据点的排列），统计总共有多少次的行打乱后，$I_d (X_i plus.circle Y_i)$ 小于了原始的 $I_d (X plus.circle Y)$，其中 $X_i，Y_i$ 分别为此时行打乱后的数据集合。假设统计出来的次数为 $L$，那么置信指数 $p$ 的计算公式如@eqt:idcor_pvalue 所示。
+$X plus.circle Y$ 表示将 $X$ 数据集合与 $Y$ 数据集合按每个数据点的维数拼接。此外，值得注意的是，不管使用哪种估计数据集合的本征维度的方法，都存在可能的误差。因此可能计算出并不准确的本征维度 $I_d$ 值，进而影响到 $\I_d\C\o\r$ 指标的可信。因此，Lorenzo等人利用了置换检验的思想，引入了一个置信指数 $p$ 来辅助计算两个数据集合之间的相关程度。置信指数 $p$ 代表着两个数据集合之间不相关的假设成立的概率。其思想是针对按照维度拼接的数据集合 $X plus.circle Y$，人为进行总计 $\s\h\u\f\f\l\e\N$ 次的行打乱（即按行更改数据点的排列），统计总共有多少次的行打乱后，$I_d (X_i plus.circle Y_i)$ 小于了原始的 $I_d (X plus.circle Y)$，其中 $X_i, Y_i$ 分别为此时行打乱后的数据集合。假设统计出来的次数为 $L$，那么置信指数 $p$ 的计算公式如@eqt:idcor_pvalue 所示。
 
 $
   p = (L + 1) / (\s\h\u\f\f\l\e\N + 1)  
 $<idcor_pvalue>
 
-置信指数$p$的值越低，表明两个数据集合之间的相关性程度越高，反之则越低。从直觉的角度来看，如果两个数据集合之间存在较高的相关性，那么进行总计 $\s\h\u\f\f\l\e\N$ 次的行打乱后，每次的打乱使得 $I_d (X_i plus.circle Y_i) < I_d (X plus.circle Y)$ 的概率都不大，这是因为进行行打乱会破坏原有数据集合的相关性，因此针对维度拼接的数据集合 $X plus.circle Y$ 估算出来的本征维度倾向于增加（破坏原有的两个数据集合的相关性后，需要更多的维度来表示这两个数据集合拼接后的集合），因此统计出来的 $L$ 并不会很大，置信指数 $p$ 也不会很大；反之，如果两个数据集合之间本身的相关程度不高，那么进行行打乱后，可能打乱后的数据集合 $X_i，Y_i$ 在某些维度上存在一些相关性，因此针对维度拼接的数据集合 $X plus.circle Y$ 估算出来的本征维度倾向于减少（在某些维度上存在的相关性减少了拼接后的集合所需的本征维数），导致 $I_d (X_i plus.circle Y_i) < I_d (X plus.circle Y)$ 的概率会增大，进而导致统计出来的 $L$ 会较大，置信指数 $p$ 也会较高。
+置信指数$p$的值越低，表明两个数据集合之间的相关性程度越高，反之则越低。从直觉的角度来看，如果两个数据集合之间存在较高的相关性，那么进行总计 $\s\h\u\f\f\l\e\N$ 次的行打乱后，每次的打乱使得 $I_d (X_i plus.circle Y_i) < I_d (X plus.circle Y)$ 的概率都不大，这是因为进行行打乱会破坏原有数据集合的相关性，因此针对维度拼接的数据集合 $X plus.circle Y$ 估算出来的本征维度倾向于增加（破坏原有的两个数据集合的相关性后，需要更多的维度来表示这两个数据集合拼接后的集合），因此统计出来的 $L$ 并不会很大，置信指数 $p$ 也不会很大；反之，如果两个数据集合之间本身的相关程度不高，那么进行行打乱后，可能打乱后的数据集合 $X_i, Y_i$ 在某些维度上存在一些相关性，因此针对维度拼接的数据集合 $X plus.circle Y$ 估算出来的本征维度倾向于减少（在某些维度上存在的相关性减少了拼接后的集合所需的本征维数），导致 $I_d (X_i plus.circle Y_i) < I_d (X plus.circle Y)$ 的概率会增大，进而导致统计出来的 $L$ 会较大，置信指数 $p$ 也会较高。
 
 @eqt:idcor 和@eqt:idcor_pvalue 计算得到的 $\I_d\C\o\r$ 数值和置信指数 $p$ 统一称为 $\I_d\C\o\r$ 指标。实现 $\I_d\C\o\r$ 指标的算法伪代码如@algo:idcoralgo 所示。一般来说，$\I_d\C\o\r$ 指标的值范围在 $[0,1]$ 之间。本文之后将基于 $\I_d\C\o\r$ 指标来高效地计算多模态大型语言模型产生的表征之间的相关性，这个指标是评估多模态大型语言模型模态融合程度的算法的基础。
 
@@ -494,7 +494,7 @@ $<idcor_pvalue>
 在这一小节中，将在人为生成的可控的数据表征上进行多种指标的性能对比实验。人为可控的含义即在构造数据表征的每个维度时，均可以硬性地控制每个维度采样的数据所服从的概率分布，如正态分布；以及不同数据表征的特定维度之间的数学表达式关系，例如 $X$ 表征集合的第一维与 $Y$ 表征集合的第一维的线形关系 $X_(\d\i\m_1) = Y_(\d\i\m_1)$。因此这些人为生成的数据表征之间的相关性在数学上是直观且可证明的，存在一个客观的真实值。这个真实值可以帮助判断各种指标计算出来的结果正确与否。
 
 ==== 一维数据表征集合之间的相关性
-本节总计选取了三类人为生成的条件，每类条件都采样了两个一维数据表征集合 $X in RR^(n times 1)，Y in RR^(n times 1)$。这三类人为生成的条件中，两个一维表征集合 $X，Y$ 之间的关系分别是线形、螺旋、随机（无相关性），以数学表达式表明这三类条件如 @eqt:1dcorrexp 所示。线形关系的两个数据表征集合 $X_1，Y_1$ 中，$X_1$ 在 $[-1,1]$ 区间上均匀采样，而 $Y_1$ 完全线形依赖于 $X_1$；螺旋关系的两个数据表征集合 $X_2，Y_2$ 均非线形依赖于在 $[0,6pi]$ 区间上均匀采样的 $theta$；随机关系的两个数据表征集合 $X_3，Y_3$ 各自服从于 $mu=0，sigma^2 = 1$ 的独立正态分布。每类人为生成的条件中，$X，Y$ 均采样5000个数据点。这三类条件设置与3.4节中一致，这三类条件采样出来的数据点二维散点图如@img:2dimension_corr 所示。
+本节总计选取了三类人为生成的条件，每类条件都采样了两个一维数据表征集合 $X in RR^(n times 1), Y in RR^(n times 1)$。这三类人为生成的条件中，两个一维表征集合 $X, Y$ 之间的关系分别是线形、螺旋、随机（无相关性），以数学表达式表明这三类条件如 @eqt:1dcorrexp 所示。线形关系的两个数据表征集合 $X_1, Y_1$ 中，$X_1$ 在 $[-1, 1]$ 区间上均匀采样，而 $Y_1$ 完全线形依赖于 $X_1$；螺旋关系的两个数据表征集合 $X_2, Y_2$ 均非线形依赖于在 $[0, 6pi]$ 区间上均匀采样的 $theta$；随机关系的两个数据表征集合 $X_3, Y_3$ 各自服从于 $mu=0, sigma^2 = 1$ 的独立正态分布。每类人为生成的条件中，$X, Y$ 均采样5000个数据点。这三类条件设置与3.4节中一致，这三类条件采样出来的数据点二维散点图如@img:2dimension_corr 所示。
 
 $
   x_1 ~ "Uniform"(-1, 1) quad y_1 = X_1 \
@@ -502,13 +502,13 @@ $
   x_3 ~ "Normal"(0, 1) quad y_3 ~ "Normal"(0, 1)
 $<1dcorrexp>
 
-容易推理得到，线形关系的两个数据表征集合 $X_1，Y_1$ 之间的相关性为1，因为 $Y_1$ 完全依赖于 $X_1$；螺旋关系的两个数据表征集合 $X_2，Y_2$ 之间的相关性为1，因为可以推理得到@eqt:1dspiral 的结果，表征集合 $X_2，Y_2$ 之间存在一种非线形关系，同时 $x_2，y_2$ 变量均依赖于 $theta$，从数学角度上 $X_2，Y_2$ 表征集合的每个数据点都可以用相同的 $theta$ 表示，因此相关性程度为1；而随机关系的两个数据表征集合 $X_3，Y_3$ 之间的相关性为0，因为两个数据表征集合均服从独立的正态分布，因此没有任何相关性。
+容易推理得到，线形关系的两个数据表征集合 $X_1, Y_1$ 之间的相关性为1，因为 $Y_1$ 完全依赖于 $X_1$；螺旋关系的两个数据表征集合 $X_2, Y_2$ 之间的相关性为1，因为可以推理得到@eqt:1dspiral 的结果，表征集合 $X_2, Y_2$ 之间存在一种非线形关系，同时 $x_2, y_2$ 变量均依赖于 $theta$，从数学角度上 $X_2, Y_2$ 表征集合的每个数据点都可以用相同的 $theta$ 表示，因此相关性程度为1；而随机关系的两个数据表征集合 $X_3, Y_3$ 之间的相关性为0，因为两个数据表征集合均服从独立的正态分布，因此没有任何相关性。
 
 $
   x_2^2 + y_2^2 = (theta^2 cos^2 theta + theta^2 sin^2 theta) / (36pi^2) = theta^2 / (36pi^2)
 $<1dspiral>
 
-明晰了这三类条件下客观的相关性程度后，应用了多种指标来计算两个一维数据表征集合之间的相关性。具体来说，本文选取了以下指标进行对比实验：线形相关性系数（$"R"^2$），距离相关系数（dCor），$\I_d\C\o\r$ 指标。本文针对每类条件下的两个一维数据表征集合 $X，Y$，均进行了10次实验，每次实验都应用这三种指标进行评估，将这10次实验得到的指标结果进行平均后，数据如@tbl:1dcorrresult 所示，其中 $I_d plus.circle$ 代表了两个数据表征集合按维度拼接后得到的表征集合的本征维度。置信指数 $p$ 统计了10次采样的得到的最小值及最大值，以区间的形式展示。
+明晰了这三类条件下客观的相关性程度后，应用了多种指标来计算两个一维数据表征集合之间的相关性。具体来说，本文选取了以下指标进行对比实验：线形相关性系数（$"R"^2$），距离相关系数（dCor），$\I_d\C\o\r$ 指标。本文针对每类条件下的两个一维数据表征集合 $X, Y$，均进行了10次实验，每次实验都应用这三种指标进行评估，将这10次实验得到的指标结果进行平均后，数据如@tbl:1dcorrresult 所示，其中 $I_d plus.circle$ 代表了两个数据表征集合按维度拼接后得到的表征集合的本征维度。置信指数 $p$ 统计了10次采样的得到的最小值及最大值，以区间的形式展示。
 
 #tablex(
   [线形关系], [$1.00plus.minus 0.00$], [$1.00plus.minus 0.00$], [$1.00plus.minus 0.00$], [$[0.01, 0.01]$], [$1.00plus.minus 0.03$],
@@ -523,7 +523,7 @@ $<1dspiral>
     [$I_d plus.circle$]
   ),
   columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-  colnum: 6,
+  // colnum: 6,
   caption: [一维数据表征集合之间各指标计算得到的相关性（平均）],
   label-name: "1dcorrresult",
 )
@@ -535,7 +535,7 @@ $<1dspiral>
 
 
 ==== 四维数据表征集合之间的相关性
-本文总计选取了三类人为生成的条件，每类条件都采样了两个四维数据表征集合 $X in RR^(n times 4)，Y in RR^(n times 4)$。这三类人为生成的条件中，两个四维表征集合 $X，Y$ 之间的关系分别是部分相关、完全相关、随机（无相关性），以数学表达式表明这三类条件如@eqt:4dcorrexp 所示，其中 $X_1，X_2，X_3$ 的四个维度采样都遵循 $w_1，x_1，y_1，z_1$，$Y_1，Y_2，Y_3$ 的四个维度采样分别依次遵循@eqt:4dcorrexp 中剩余的几种随机变量的概率分布。部分相关关系的两个数据表征集合 $X_1，Y_1$中，$X_1$ 的四个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，而 $Y_1$ 的后两个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，但是前两个维度非线形依赖于 $X_1$ 的部分维度；完全相关的两个数据表征集合 $X_2，Y_2$ 中，$X_2$ 的四个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，$Y_2$ 的四个维度全部非线形依赖于 $X_2$ 的部分维度；随机关系的两个数据表征集合 $X_3，Y_3$ 中，$X_3$ 和 $Y_3$ 的四个维度都各自服从于 $mu=0，sigma^2 = pi^2$ 的独立正态分布。每类人为生成的条件中，$X，Y$ 均采样5000个数据点，这与3.6.1.1节中的采样数量是一致的。
+本文总计选取了三类人为生成的条件，每类条件都采样了两个四维数据表征集合 $X in RR^(n times 4), Y in RR^(n times 4)$。这三类人为生成的条件中，两个四维表征集合 $X, Y$ 之间的关系分别是部分相关、完全相关、随机（无相关性），以数学表达式表明这三类条件如@eqt:4dcorrexp 所示，其中 $X_1, X_2, X_3$ 的四个维度采样都遵循 $w_1, x_1, y_1, z_1$ 服从的概率分布，$Y_1, Y_2, Y_3$ 的四个维度采样分别依次遵循@eqt:4dcorrexp 中剩余的几种随机变量服从的概率分布。部分相关关系的两个数据表征集合 $X_1, Y_1$中，$X_1$ 的四个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，而 $Y_1$ 的后两个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，但是前两个维度非线形依赖于 $X_1$ 的部分维度；完全相关的两个数据表征集合 $X_2, Y_2$ 中，$X_2$ 的四个维度各自独立地服从 $mu = 0, sigma^2 = pi^2$ 的正态分布，$Y_2$ 的四个维度全部非线形依赖于 $X_2$ 的部分维度；随机关系的两个数据表征集合 $X_3, Y_3$ 中，$X_3$ 和 $Y_3$ 的四个维度都各自服从于 $mu=0, sigma^2 = pi^2$ 的独立正态分布。每类人为生成的条件中，$X, Y$ 均采样5000个数据点，这与3.6.1.1节中的采样数量是一致的。
 
 
 $
@@ -550,10 +550,10 @@ $
 $<4dcorrexp>
 
 
-可以推理得到，部分相关的两个数据表征集合 $X_1， Y_1$ 之间存在部分的非线形相关性，因为 $Y_1$ 的前两个维度 $X_1$ 的部分维度之间呈现了三角函数（非线形）依赖；完全相关的两个数据表征集合 $X_1，Y_1$ 之间存在很强的非线形相关性，因为 $Y_2$ 的四个维度全部与 $X_2$ 的部分维度之间呈现了三角函数（非线形）依赖；随机关系的两个数据表征集合 $X_3，Y_3$ 之间不存在任何相关性，因为 $X_3，Y_3$ 的所有维度都是独立采样的。
+可以推理得到，部分相关的两个数据表征集合 $X_1, Y_1$ 之间存在部分的非线形相关性，因为 $Y_1$ 的前两个维度 $X_1$ 的部分维度之间呈现了三角函数（非线形）依赖；完全相关的两个数据表征集合 $X_1, Y_1$ 之间存在很强的非线形相关性，因为 $Y_2$ 的四个维度全部与 $X_2$ 的部分维度之间呈现了三角函数（非线形）依赖；随机关系的两个数据表征集合 $X_3, Y_3$ 之间不存在任何相关性，因为 $X_3, Y_3$ 的所有维度都是独立采样的。
 
 
-确定了这三类条件下的客观的相关性程度后，应用了多种指标来计算两个四维数据表征集合之间的相关性。具体来说，本文选取了典型相关性分析（CCA），距离相关系数（dCor）， $\I_d\C\o\r$ 指标。本文针对每类条件下的两个四维数据表征集合 $X，Y$ 均进行了5000次的实验，每次实验都应用这三种指标进行评估，将这5000次实验得到的指标结果进行平均后，数据如@tbl:4dcorrresult 所示，其中 $I_d plus.circle$ 代表了两个数据表征集合按维度拼接后得到的表征集合的本征维度。置信指数 $p$ 统计了5000次实验中得到的最小值及最大值，以区间的形式展示。
+确定了这三类条件下的客观的相关性程度后，应用了多种指标来计算两个四维数据表征集合之间的相关性。具体来说，本文选取了典型相关性分析（CCA），距离相关系数（dCor）， $\I_d\C\o\r$ 指标。本文针对每类条件下的两个四维数据表征集合 $X, Y$ 均进行了5000次的实验，每次实验都应用这三种指标进行评估，将这5000次实验得到的指标结果进行平均后，数据如@tbl:4dcorrresult 所示，其中 $I_d plus.circle$ 代表了两个数据表征集合按维度拼接后得到的表征集合的本征维度。置信指数 $p$ 统计了5000次实验中得到的最小值及最大值，以区间的形式展示。
 
 
 #tablex(
@@ -569,7 +569,7 @@ $<4dcorrexp>
     [$I_d plus.circle$]
   ),
   columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-  colnum: 6,
+  // colnum: 6,
   caption: [四维数据表征集合之间各指标计算得到的相关性（平均）],
   label-name: "4dcorrresult",
 )
@@ -606,7 +606,7 @@ $<mlpforward>
   ),
   kind: "image",
   supplement: [图],
-  caption: [MNIST手写数字体识别数据集示意图], // 英文图例
+  caption: [MNIST手写数字体识别数据集示例], // 英文图例
 )<mnistshow>
 
 #v(1.5em)
@@ -655,7 +655,7 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
   ),
   kind: "image",
   supplement: [图],
-  caption: [对mnist经过MLP神经网络产生的表征计算相关性指标], // 英文图例
+  caption: [对mnist经过MLP神经网络产生的表征计算相关性系数], // 英文图例
 )<mnistexp>
 
 #v(1.5em)
@@ -671,11 +671,11 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
 #figure(
   image(
     "figures/imagenet.png",
-    width: 100%,
+    width: 95%,
   ),
   kind: "image",
   supplement: [图],
-  caption: [ImageNet数据集示意图], // 英文图例
+  caption: [ImageNet数据集示例], // 英文图例
 )<imagenetshow>
 
 #v(1.5em)
@@ -686,7 +686,7 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
 
 ==== 实验结果与分析
 
-实验结果如@img:imagenetbaselineexp 、@img:imagenetidcorexp @tbl:imagenetmean 所示。@tbl:imagenetmean 中的结果是不同指标在@img:imagenetbaselineexp 和@img:imagenetidcorexp 中计算得到的矩阵中去除对角线上的元素而计算得到的平均值（因为对角线上的元素是同种视觉模型产生的表征之间衡量相似度，并没有计算的实际意义）。可以观察到，所有的指标均可以捕获到不同视觉模型产生的表征之间的一些相关性，但是一些基线指标反映出来的值并不高。例如dCor指标在计算视觉模型EfficientNet-B0和CLIP（其中的视觉模型）产生的表征之间的相关性时，其计算出来的值为0.29，这个较低的值并不能很好的反映出这两个表征集合之间的相关性，因为这两个表征本质上都是对原始数据表征做了非线形变换从而得到的结果。从@tbl:imagenetmean 展示的不同指标计算得到的非对角线元素的平均值中可以观察到，基线指标中表现最好的是dCor指标，其平均值在基线指标中达到了最高，为0.51；而 $I_d\C\o\r$ 指标的平均值达到了0.88，远高于其他所有指标的平均值，比较@img:imagenetidcorexp 和@img:imagenetbaselineexp 中的结果也可以观察得到类似的结论。同时置信指数 $p$ 也较低，表明两个视觉表征集合之间没有相关性的可能性不高。这表明 $I_d\C\o\r$ 指标在捕获视觉模型产生的表征之间的相关性方面表现优异，尤其是在处理复杂的非线性关系时。
+实验结果如@img:imagenetbaselineexp 、@img:imagenetidcorexp 、@tbl:imagenetmean 所示。@tbl:imagenetmean 中的结果是不同指标在@img:imagenetbaselineexp 和@img:imagenetidcorexp 中计算得到的矩阵中去除对角线上的元素而计算得到的平均值（因为对角线上的元素是同种视觉模型产生的表征之间衡量相似度，并没有计算的实际意义）。可以观察到，所有的指标均可以捕获到不同视觉模型产生的表征之间的一些相关性，但是一些基线指标反映出来的值并不高。例如dCor指标在计算视觉模型EfficientNet-B0和CLIP（其中的视觉模型）产生的表征之间的相关性时，其计算出来的值为0.29，这个较低的值并不能很好的反映出这两个表征集合之间的相关性，因为这两个表征本质上都是对原始数据表征做了非线形变换从而得到的结果。从@tbl:imagenetmean 展示的不同指标计算得到的非对角线元素的平均值中可以观察到，基线指标中表现最好的是dCor指标，其平均值在基线指标中达到了最高，为0.51；而 $I_d\C\o\r$ 指标的平均值达到了0.88，远高于其他所有指标的平均值，比较@img:imagenetidcorexp 和@img:imagenetbaselineexp 中的结果也可以观察得到类似的结论。同时置信指数 $p$ 也较低，表明两个视觉表征集合之间没有相关性的可能性不高。这表明 $I_d\C\o\r$ 指标在捕获视觉模型产生的表征之间的相关性方面表现优异，尤其是在处理复杂的非线性关系时。
 
 #figure(
   grid(
@@ -698,7 +698,7 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
   ),
   kind: "image",
   supplement: [图],
-  caption: [基线指标对视觉模型产生的表征之间的相关性程度计算（ImageNet）], // 英文图例
+  caption: [基线指标对视觉模型产生的表征之间的相关性系数（ImageNet）], // 英文图例
 )<imagenetbaselineexp>
 
 #v(1.5em)
@@ -712,7 +712,7 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
   ),
   kind: "image",
   supplement: [图],
-  caption: [$I_d\C\o\r$ 指标对视觉模型产生的表征之间的相关性程度计算（ImageNet）], // 英文图例
+  caption: [$I_d\C\o\r$ 指标对视觉模型产生的表征之间的相关性系数（ImageNet）], // 英文图例
 )<imagenetidcorexp>
 
 #v(1.5em)
@@ -728,8 +728,8 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
     [平均值 #linebreak()],
   ),
   columns: (1fr, 1fr),
-  colnum: 2,
-  caption: [ImageNet上不同指标计算视觉模型产生的表征之间的相似性（非对角线平均值）],
+  // colnum: 2,
+  caption: [ImageNet上不同指标计算视觉模型产生的表征之间的相关性系数（非对角线平均值）],
   label-name: "imagenetmean",
 )
 
@@ -774,7 +774,7 @@ Leaky ReLU激活函数是一个在 $x = 0$ 处分段的分段函数。在 $x < 0
     [CLIP #linebreak()],
   ),
   columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-  colnum: 9,
+  // colnum: 9,
   caption: [类内混洗（s）与完全随机混洗（r）下的指标结果],
   label-name: "imagenetcoarse",
 )
@@ -802,7 +802,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
   ),
   kind: "image",
   supplement: [图],
-  caption: [MS-COCO 2014 Caption[左]与N24News[右]数据集示意图], // 英文图例
+  caption: [MS-COCO 2014 Caption[左]与N24News[右]数据集示例], // 英文图例
 )<cococapshow>
 
 
@@ -830,7 +830,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
   ),
   kind: "image",
   supplement: [图],
-  caption: [基线指标对多模态表征之间的相关性程度计算（MSCOCO）], // 英文图例
+  caption: [基线指标对多模态表征之间的相关性系数（MSCOCO）], // 英文图例
 )<cocobaselineexp>
 
 #v(1.5em)
@@ -844,7 +844,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
   ),
   kind: "image",
   supplement: [图],
-  caption: [$I_d\C\o\r$ 指标对多模态表征之间的相关性程度计算（MSCOCO）], // 英文图例
+  caption: [$I_d\C\o\r$ 指标对多模态表征之间的相关性系数（MSCOCO）], // 英文图例
 )<cocoidcorexp>
 
 #v(1.5em)
@@ -860,8 +860,8 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
     [平均值 #linebreak()],
   ),
   columns: (1fr, 1fr),
-  colnum: 2,
-  caption: [MSCOCO上不同指标计算多模态表征之间的相似性（非对角线平均值）],
+  // colnum: 2,
+  caption: [MSCOCO上不同指标计算多模态表征之间的相关性系数（非对角线平均值）],
   label-name: "cocomean",
 )
 
@@ -877,7 +877,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
   ),
   kind: "image",
   supplement: [图],
-  caption: [基线指标对多模态表征之间的相关性程度计算（N24News）], // 英文图例
+  caption: [基线指标对多模态表征之间的相关性系数（N24News）], // 英文图例
 )<n24newsbaselineexp>
 
 #v(1.5em)
@@ -891,7 +891,7 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
   ),
   kind: "image",
   supplement: [图],
-  caption: [$I_d\C\o\r$ 指标对多模态表征之间的相关性程度计算（N24News）], // 英文图例
+  caption: [$I_d\C\o\r$ 指标对多模态表征之间的相关性系数（N24News）], // 英文图例
 )<n24newsidcorexp>
 
 #v(1.5em)
@@ -907,22 +907,22 @@ MS-COCO Caption 数据集专注于图像描述生成任务。该数据集中每�
     [平均值 #linebreak()],
   ),
   columns: (1fr, 1fr),
-  colnum: 2,
-  caption: [N24News上不同指标计算多模态表征之间的相似性（非对角线平均值）],
+  // colnum: 2,
+  caption: [N24News上不同指标计算多模态表征之间的相关性系数（非对角线平均值）],
   label-name: "n24newsmean",
 )
 
-#v(4.0em)
+#v(1.5em)
 
 == 本章小结
-本章首先从设计多模态大型语言模型模态融合程度评估算法时所遇到的实际问题出发：表征来自不同模态模型的encoder；表征往往是高维的；表征之间存在难以捕获的复杂非线形关系，引出了需要一个能够在高维空间中准确捕获表征间非线形关系，且能够在多模态领域中对语义对齐的多模态表征准确捕获相关性的指标的需求。接着本章引入了几种基线指标：典型相关性分析（CCA） @cca ，奇异值分解典型相关性分析（SVCCA）@svcca ，中心化核对齐 （CKA） @cka ，投影加权典型相关性分析（PWCCA） @pwcca ， 距离相关系数（dCor），以及重点介绍了数据表征集合的本征维度概念以及 $I_d\C\o\r$ 指标的原理和算法实现。
+本章首先从设计多模态大型语言模型模态融合程度评估算法时所遇到的实际问题出发：表征来自不同模态模型的编码器；表征往往是高维的；表征之间存在难以捕获的复杂非线形关系，引出了需要一个能够在高维空间中准确捕获表征间非线形关系，且能够在多模态领域中对语义对齐的多模态表征准确捕获相关性的指标的需求。接着本章引入了几种基线指标：典型相关性分析（CCA） @cca ，奇异值分解典型相关性分析（SVCCA）@svcca ，中心化核对齐 （CKA） @cka ，投影加权典型相关性分析（PWCCA） @pwcca ， 距离相关系数（dCor），以及重点介绍了数据表征集合的本征维度概念以及 $I_d\C\o\r$ 指标的原理和算法实现。
 
 本章重点设计了衡量 $I_d\C\o\r$ 指标与其他基线指标之间的性能对比实验，通过在人造数据表征、神经网络表征、单一模态（视觉）表征、多模态（图文）表征的角度上进行全面充分的对比表征相关性指标之间的性能差异实验，并进行了详实的数据分析。通过对比实验，最终实验结果表明： $I_d\C\o\r$ 指标在捕获表征之间的相关性方面表现优异，尤其是在处理复杂的非线性关系时，并且在高维表征及多模态表征上都表现优异，同时对于存在一定噪声的数据时也具有良好的鲁棒性。这些良好的性能特征都是其他指标所不具有的。本章成功验证了 $I_d\C\o\r$ 指标在不同模态表征上的可靠性，为多模态大模型的模态对齐评估提供了有效的工具。
 
 
 
 
-= 评估多模态大型语言模型模态对齐的算法
+= 多模态大型语言模型模态对齐评估算法
 
 == 问题背景及研究思路
 在第3.1节与第3.2节中已经阐述了评估多模态大型语言模型模态对齐程度的重要性以及设计相关评估算法时将会面临的实际问题，如多模态表征处于各自模态的潜空间中，这些潜空间的维度往往是高维的，且不同模态的潜空间维度可能不相等；表征之间存在复杂的非线形关系；表征的多模态属性等。但是第三章的工作已经通过对比实验为本文筛选出来一个足以适应高维的多模态表征，具有强大的复杂非线形关系捕获能力，且对数据中存在的噪声鲁棒的评估指标 $I_d\C\o\r$。因此本章将 $I_d\C\o\r$ 指标作为设计一个评估多模态大型语言模型模态对齐程度的算法的核心。
@@ -961,17 +961,19 @@ $<idcorgroupexp>
   caption: [evalmm算法执行过程], // 英文图例
 )<evalmm>
 
+#v(1.5em)
 
 #figure(
   image(
     "figures/fusionway.png",
-    width: 80%,
+    width: 65%,
   ),
   kind: "image",
   supplement: [图],
   caption: [evalmm算法采取的模态融合方式计算过程], // 英文图例
 )<fusionway>
 
+#v(1.5em)
 
 #[
   #import "@preview/lovelace:0.2.0": *
@@ -1047,7 +1049,7 @@ Haotian Liu等人@llava 在训练LLaVA模型时的训练策略分为两阶段，
 
 应用evalmm算法评估LLaVA模型在第一阶段训练过程中的模态对齐程度变化符合预期。这是因为在第一阶段模态对齐的训练过程中，虽然仅训练MLP网络的参数，但是随着MLP网络的训练，经过MLP投影后的视觉特征将逐步对齐于文本特征的嵌入向量，因此模态对齐的程度将会逐渐上升，并有一种收敛的趋势。@img:idcorchange 中的模态对齐程度变化曲线符合了这一点，同时体现了上升及收敛的特征，且收敛于0.47，对于 $I_d\C\o\r$ 指标在衡量多模态表征时是一个较高的值。这表明evalmm算法是有效的。
 
-== 多模态大型语言模型模态对齐程度对下游任务的影响
+== 模态对齐程度对下游任务的影响
 本小节是对evalmm评估算法的扩展应用。多模态大型语言模型的训练往往分为两个阶段（如LLaVA，BLIP-2等）：第一个阶段的目标是进行多模态间的对齐，第二个阶段的目标是进行下游任务的微调。本小节旨在探讨多模态大型语言模型在第一个阶段训练时达成的模态对齐程度对下游任务性能上的影响。
 
 具体而言，本文以在4.3小节中设置的LLaVA模型为例，在第一阶段模态对齐的训练中，在LLaVA-CC3M-Pretrain-595K图像问答数据集上训练3个epoch，一个批次的大小为32，学习率为2e-3，采用余弦学习率调度器调整学习率，仅训练模态融合网络MLP，并且间隔2000步进行模型的保存，同时运用evalmm算法对保存的模型进行模态对齐程度的评估。在第二阶段的训练中，选取了ScienceQA@scienceqa 作为下游任务Benchmark，其是一个广泛使用的多模态科学问答数据集，通过选项的方式来选出正确的答案。对第一阶段中保存的所有模型进行3个epoch的ScienceQA训练集的微调，一个批次的大小为16，学习率为2e-3，采用余弦学习率调度器调整学习率。之后运用ScienceQA的测试集对模型进行评估，并记录其性能表现。此外，针对微调后的模型，也使用evalmm算法对其模态对齐程度进行评估。最后将第一阶段模态对齐训练过程中的模态对齐程度与第二阶段下游任务微调过程中的性能以及模态对齐程度进行对比分析。本实验中使用的evalmm评估数据集皆为LLaVA-CC3M-Pretrain-595K（仅使用图像及问题）。
@@ -1075,7 +1077,7 @@ Haotian Liu等人@llava 在训练LLaVA模型时的训练策略分为两阶段，
   caption: [LLaVA stage1训练过程中的模态对齐程度变化], // 英文图例
 )<idcorcompare>
 
-#v(4em)
+#v(1.5em)
 
 == 本章小结
 本章主要介绍了基于 $I_d\C\o\r$ 指标所设计的评估多模态大型语言模型模态对齐程度的算法evalmm。对其执行过程进行了详细的阐述。此外，应用evalmm算法对实际的多模态大型语言模型LLaVA在第一阶段模态对齐的训练过程中进行了评估，评估结果符合预期，表明evalmm算法是客观有效的。同时，evalmm算法的设计过程充分考虑了计算资源的消耗，是一个高效的评估算法。在本章的最后部分，还利用了evalmm算法对多模态大型语言模型模态对齐程度对下游任务的影响进行了探讨，实验结果表明模态对齐程度与下游任务性能之间存在一定的正相关性，这为多模态相关的研究提供了新的视角。
